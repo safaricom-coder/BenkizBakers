@@ -1,0 +1,36 @@
+{% extends "main.html" %}
+
+{% block title %}
+  Cake Gallery
+{% endblock title %}
+
+{% block body %}
+<section class="shop spad">
+    <div class="container">
+        <div class='row'>
+        {% for item in items  %}
+        
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="product__item">
+                    <div class="product__item__pic set-bg" >
+                        <img src={{ item.thumbnail.url}} alt="">
+                        <div class="product__label">
+                            <span>Cupcake</span>
+                        </div>
+                    </div>
+                    <div class="product__item__text">
+                        <h6><a href="#">German Chocolate</a></h6>
+                        <div class="product__item__price">Shs. 14.00</div>
+                        <div class="cart_add">
+                            <a href="#">Add to cart</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+        {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% endblock body %}

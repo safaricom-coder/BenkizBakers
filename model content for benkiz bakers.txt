@@ -1,0 +1,28 @@
+    access_token = get_access_token()
+    timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+    business_short_code = '174379'
+    passkey = 'bfb279f9aa9bdbcf113b...YOUR_PASSKEY'
+    data_to_encode = business_short_code + passkey + timestamp
+    password = b64encode(data_to_encode.encode()).decode()
+
+    stk_push_url = 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest'
+    headers = {
+        'Authorization': f'Bearer {access_token}',
+        'Content-Type': 'application/json'
+    }
+    payload = {
+        "BusinessShortCode": business_short_code,
+        "Password": password,
+        "Timestamp": timestamp,
+        "TransactionType": "CustomerPayBillOnline",
+        "Amount": cart_total,
+        "PartyA": paymentdetail.phone_number,
+        "PartyB": business_short_code,
+        "PhoneNumber": paymentdetail.phone_number,
+        "CallBackURL": "https://yourdomain.com/api/payment/callback/",
+        "AccountReference": "CartCheckout",
+        "TransactionDesc": "Paying for cart"
+    }
+
+    response = requests.post(stk_push_url, headers=headers, json=payload)
+    return JsonResponse(response.json())

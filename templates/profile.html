@@ -1,0 +1,44 @@
+{% extends "main.html" %}
+
+{% block title %}
+  Profile
+{% endblock title %}
+
+{% block body %}
+profile name : <h3>{{profile.user.username}}</h3>
+user name : <h3>{{user.username}}</h3>
+<div class="user_details">
+    <div class="username">
+        {{profile.user.username}}
+    </div>
+    <div class="user_phone">
+        Phone Number : {{profile.phone_number}}
+    </div>
+    <div class="lastname">
+        {{profile.lastname}}
+    </div> 
+    <div class="county">
+        {{profile.county}}
+    </div>
+    <div class="country">{{profile.country}}</div>
+    <div class="address_or_street">
+        adress: {{profile.address_or_street}}
+        
+    </div>
+    <div class="apartment_or_house_name_or_number"> Apartment : {{profile.apartment_or_house_name_or_number}}</div>
+</div>
+<div class="profile_picture">
+    <img src='' alt="Profile Picture">
+    
+</div>
+
+<div class="billing_registration">
+    <form action={% url 'updateprofile' %} method="get">
+        <button type="submit">
+            Complete Profile or <br><hr>
+            Add Billing Details
+        </button>
+    </form>
+</div>
+
+{% endblock body %}

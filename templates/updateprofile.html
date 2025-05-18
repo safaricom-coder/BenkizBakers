@@ -1,0 +1,13 @@
+{% extends "main.html" %}
+
+{% block title %}
+  Create Profile
+{% endblock title %}
+
+{% block body %}
+  <form action= {% url "updateprofile" %} method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Update Profile</button>
+  </form>
+{% endblock body %}
