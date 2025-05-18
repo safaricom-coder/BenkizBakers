@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 
 
 class Cart(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     @property
     def counting(self):
         counting = sum(cart_item.quantity for cart_item in self.items.all())
@@ -15,23 +15,25 @@ class Cart(models.Model):
     total = 0
     deliveryfee = 0
     totalcost = 0
+    vat = 0
     
     
     @property
     def calcTotal(self):
         
-        total = sum(cart_item.subtotal for cart_item in self.items.all())
-        deliveryfee = total *.02
-        self.deliveryfee = int(deliveryfee)
-        totalcost = total + deliveryfee
-        self.totalcost = totalcost
-        self.total = total
-        return total
+        totall = sum(cart_item.subtotal for cart_item in self.items.all())
+        deliveryfee = totall *.02
+        self.deliveryfee = float(deliveryfee)
+        self.vat = float(totall *.03)
+        totalcost = totall + deliveryfee + self.vat
+        self.totalcost = int(totalcost)
+        self.total = totall
+        return ''
     
 
 
     def __str__(self):
-        return f"{self.user.username}'s" 
+        return f"{self.user.username.capitalize}'s cart" 
 
 
 class Item(models.Model):
@@ -45,7 +47,7 @@ class Item(models.Model):
     price = models.PositiveIntegerField(default=30)
     numberOfItems = models.PositiveIntegerField(default=5)
 
-
+    paginate_by = 4
     
     def __str__(self):
         return self.name.capitalize()
@@ -64,15 +66,15 @@ class CartItem(models.Model):
     
 
 class UserProfile(models.Model):
-    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    user = models.ForeignKey(User,on_delete=models.CASCADE,related_name='user')
     phone_number = models.CharField(max_length=20,blank=True,null=True)
     profilepic =  models.ImageField(
         upload_to='profile_pics/',
-        default='profile_pics/default.jpg',
-        blank=True
+        default='profile_pics/default.png'
     )
     
     lastname = models.CharField(max_length=50,blank=True)
+    is_team = models.BooleanField(default = False)
     country = models.CharField(max_length=50, default='Kenya',blank=True)
     county = models.CharField(max_length=50,default='Kisii',blank=True)
     address_or_street = models.CharField(max_length=50,blank=True)
@@ -87,7 +89,46 @@ class PaymentDetail(models.Model):
     
     paidstatus = models.BooleanField(default=False)
 
-# class WishList(models.Model):
-#     user = models.ForeignKey(User,on_delete=models.CASCADE)
-#     wishitems = models.ForeignKey(Ite)
+class WishList(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
     
+    def __str__(self):
+        return self.user.username +"'" +' '+'wishlist'
+    
+    
+class WishItem(models.Model):
+    wishlist = models.ForeignKey(WishList,on_delete=models.CASCADE,null=True,blank=True)
+    item = models.ForeignKey(Item,on_delete=models.CASCADE)
+    name = item.name
+    def __str__(self):
+        return self.item.name
+    
+
+class Comment(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    profile = models.ForeignKey(UserProfile,on_delete=models.CASCADE,blank=True,null=True)
+    body = models.TextField(blank=True,null=True)
+
+    def __str__(self):
+        if self.body:
+            return self.body[0:10] + '...'
+        else:
+            return self.user.username[0:10] + '...'
+class Rating(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    stars = models.PositiveIntegerField(default=0,blank=True,null=True)
+
+    def __str__(self):
+        if self.body:
+            return self.body[0:10] + '...'
+        else:
+            return self.user.username[0:10] + '...'
+
+
+class Location(models.Model):
+    name = models.CharField(max_length=50)
+    contact = models.CharField(max_length=20,blank=True,null=True)
+    mail = models.EmailField(blank=True,null=True)
+    
+    def __str__(self):
+        return self.name[0:10] + '...'

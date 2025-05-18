@@ -4,14 +4,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('',views.home,name='home'),
+    path('',views.landing,name='landing'),
+    path('home',views.home,name='home'),
     path('about/',views.about,name='about'),
     path('login/',views.login,name='login'),
     path('logout/',views.logout,name='logout'),
     path('completepurchase/',views.completepurchase,name='completepurchase'),
-
     path('profile',views.profile,name='profile'),
-    path('shop/',views.shop,name='shop'),
     path('shopdetails/',views.shopdetails,name='shopdetails'),
     path('shoppingcart/',views.shoppingcart,name='shoppingcart'),
     path('checkout/',views.checkout,name='checkout'),
@@ -24,9 +23,11 @@ urlpatterns = [
     path('gallery/',views.gallery,name='gallery'),
     path('register/',views.register,name='register'),
     path('updateprofile/',views.updateprofile,name='updateprofile'),
-    
-    
-    
+    path('addToWishlist/<str:id>',views.addToWishlist,name='addToWishlist'),
+    path('removewishitem/<str:pk>',views.removewishitem,name='removewishitem'),
+    path('createcomment/',views.createcomment,name='createcomment'),
+    path('shop/',views.ShopView.as_view(),name='shop'),
+    path('shop/',views.shop,name='shop'),
 
     path('api/payment/callback/', views.payment_callback, name='payment_callback'),
 ]

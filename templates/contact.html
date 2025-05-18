@@ -1,7 +1,7 @@
 {% extends "main.html" %}
 
 {% block title %}
-  
+  Contact
 {% endblock title %}
 
 {% block body %}
@@ -52,79 +52,36 @@
     <!-- Contact Section Begin -->
     <section class="contact spad">
         <div class="container">
-            <div class="map">
-                <div class="container">
-                    <div class="row d-flex justify-content-center">
-                        <div class="col-lg-4 col-md-7">
-                            <div class="map__inner">
-                                <h6>COlorado</h6>
+            {% include "locationmap.html" %}
+            <div class="contact__address">
+
+
+
+                <div class="row">
+                    {% for location in locations  %}
+                      
+                        <div class="col-lg-4 col-md-6 col-sm-6">
+                            <div class="contact__address__item">
+                                <h6>{{location.name}}</h6>
                                 <ul>
-                                    <li>1000 Lakepoint Dr, Frisco, CO 80443, USA</li>
-                                    <li>Sweetcake@support.com</li>
-                                    <li>+1 800-786-1000</li>
+                                    <li>
+                                        <span class="icon_pin_alt"></span>
+                                        <p>{{location.name}} KENYA</p>
+                                    </li>
+                                    <li><span class="icon_headphones"></span>
+                                        <p>+254 {{location.contact}}</p>
+                                    </li>
+                                    <li><span class="icon_mail_alt"></span>
+                                        <p>{{location.mail}}</p>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
-                    </div>
+                    {% endfor %}
                 </div>
-                <div class="map__iframe">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d10784.188505644011!2d19.053119335158936!3d47.48899529453826!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sbd!4v1543907528304" height="300" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
-                </div>
-            </div>
-            <div class="contact__address">
-                <div class="row">
-                    <div class="col-lg-4 col-md-6 col-sm-6">
-                        <div class="contact__address__item">
-                            <h6>san bernardino</h6>
-                            <ul>
-                                <li>
-                                    <span class="icon_pin_alt"></span>
-                                    <p>795 W 5th St, San Bernardino, CA 92410, USA</p>
-                                </li>
-                                <li><span class="icon_headphones"></span>
-                                    <p>+1 800-786-1000</p>
-                                </li>
-                                <li><span class="icon_mail_alt"></span>
-                                    <p>Sweetcake@support.com</p>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-6">
-                        <div class="contact__address__item">
-                            <h6>Los angeles</h6>
-                            <ul>
-                                <li>
-                                    <span class="icon_pin_alt"></span>
-                                    <p>639 S Spring St, Los Angeles, CA 90014, USA</p>
-                                </li>
-                                <li><span class="icon_headphones"></span>
-                                    <p>+1 213-612-3000</p>
-                                </li>
-                                <li><span class="icon_mail_alt"></span>
-                                    <p>Sweetcake@support.com</p>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-6">
-                        <div class="contact__address__item">
-                            <h6>san bernardino</h6>
-                            <ul>
-                                <li>
-                                    <span class="icon_pin_alt"></span>
-                                    <p>1000 Lakepoint Dr, Frisco, CO 80443, USA</p>
-                                </li>
-                                <li><span class="icon_headphones"></span>
-                                    <p>+1 800-786-1000</p>
-                                </li>
-                                <li><span class="icon_mail_alt"></span>
-                                    <p>Sweetcake@support.com</p>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+
+
+
             </div>
             <div class="row">
                 <div class="col-lg-4">
@@ -161,70 +118,6 @@
     </section>
     <!-- Contact Section End -->
 
-    <!-- Footer Section Begin -->
-    <footer class="footer set-bg" data-setbg="img/footer-bg.jpg">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="footer__widget">
-                        <h6>WORKING HOURS</h6>
-                        <ul>
-                            <li>Monday - Friday: 08:00 am – 08:30 pm</li>
-                            <li>Saturday: 10:00 am – 16:30 pm</li>
-                            <li>Sunday: 10:00 am – 16:30 pm</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="footer__about">
-                        <div class="footer__logo">
-                            <a href="#"><img src="img/footer-logo.png" alt=""></a>
-                        </div>
-                        <p>Lorem ipsum dolor amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                        labore dolore magna aliqua.</p>
-                        <div class="footer__social">
-                            <a href="#"><i class="fa fa-facebook"></i></a>
-                            <a href="#"><i class="fa fa-twitter"></i></a>
-                            <a href="#"><i class="fa fa-instagram"></i></a>
-                            <a href="#"><i class="fa fa-youtube-play"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="footer__newslatter">
-                        <h6>Subscribe</h6>
-                        <p>Get latest updates and offers.</p>
-                        <form action="#">
-                            <input type="text" placeholder="Email">
-                            <button type="submit"><i class="fa fa-send-o"></i></button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="copyright">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-7">
-                        <p class="copyright__text text-white"><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                            Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | Template by <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                        </p>
-                  </div>
-                  <div class="col-lg-5">
-                    <div class="copyright__widget">
-                        <ul>
-                            <li><a href="#">Privacy Policy</a></li>
-                            <li><a href="#">Terms & Conditions</a></li>
-                            <li><a href="#">Site Map</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</footer>
-<!-- Footer Section End -->
 
 <!-- Search Begin -->
 <div class="search-model">
@@ -236,16 +129,5 @@
     </div>
 </div>
 <!-- Search End -->
-
-<!-- Js Plugins -->
-<script src="js/jquery-3.3.1.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/jquery.nice-select.min.js"></script>
-<script src="js/jquery.barfiller.js"></script>
-<script src="js/jquery.magnific-popup.min.js"></script>
-<script src="js/jquery.slicknav.js"></script>
-<script src="js/owl.carousel.min.js"></script>
-<script src="js/jquery.nicescroll.min.js"></script>
-<script src="js/main.js"></script>
 
 {% endblock body %}

@@ -26,8 +26,22 @@ SECRET_KEY = 'django-insecure-ack@on%5i8!$u&5r95ul7ki&$x)5+2-rn#58+f018^bw@%d-u_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
 
+# |||||||||||||||||||hosts configuration||||||||||||||||||||||
+
+import dj_database_url
+
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "safariocom.pythonanywhere.com"]
+# ALLOWED_HOSTS = []
+
+# Replace it with your DATABASES.
+DATABASES = {
+    'default': dj_database_url.config(
+        default="sqlite:///" + os.path.join(BASE_DIR, "db.sqlite3")
+    )
+}
+
+# |||||||||||||||||||||||||||||||||||||||||
 
 # Application definition
 

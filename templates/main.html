@@ -1,17 +1,17 @@
-{% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
+    <title class="title">
       Benkiz |
-      {% block title %}
-   
-      {% endblock title %}
+    {% block title %}
+        Home
+    {% endblock title %}
+          
     </title>
 
+    {% load static %}
     <link rel="stylesheet" href={% static "css/bootstrap.min.css" %} type="text/css">
     <link rel="stylesheet" href={% static "css/flaticon.css" %} type="text/css">
     <link rel="stylesheet" href={% static "css/barfiller.css" %} type="text/css">
@@ -23,125 +23,327 @@
     <link rel="stylesheet" href={% static "css/slicknav.min.css" %} type="text/css">
     <link rel="stylesheet" href={% static "css/style.css"  %} type="text/css">
 </head>
+
 <body>
-  <header class="header">
-    <div class="header__top">
+{% include "header.html" %}
+    
+{% block body %}
+    
+
+    <!-- Page Preloder -->
+    <div id="preloder" style="display: none;">
+        <div class="loader" style="display: none;"></div>
+    </div>
+
+
+    <!-- Hero Section Begin -->
+    <section class="hero">
+        <div class="hero__slider owl-carousel owl-loaded owl-drag">
+            
+            
+        <div class="owl-stage-outer">
+            <div class="owl-stage" style="transform: translate3d(-2014px, 0px, 0px); transition: all 0s ease 0s; width: 6042px;">
+                
+
+                <div class="owl-item cloned" style="width: 1007px;">
+                    <div class="hero__item set-bg" data-setbg="/media/img/hero/hero-1.jpg" style="background-image: url(&quot;/media/img/hero/hero-1.jpg&quot;);">
+                        <div class="container">
+                            <div class="row d-flex justify-content-center">
+                                <div class="col-lg-8">
+                                    <div class="hero__text">
+                                        <h2>Making your life sweeter one bite at a time!</h2>
+                                        <a href="#" class="primary-btn">Our cakes</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+        <div class="owl-nav">
+            <button type="button" role="presentation" class="owl-prev">
+                <i class="fa fa-angle-left">
+                    <i></i>
+                </i>
+            </button>
+            <button type="button" role="presentation" class="owl-next">
+                <i class="fa fa-angle-right">
+                    <i></i>
+                </i>
+            </button>
+        </div>
+        <div class="owl-dots disabled">
+
+        </div>
+    </div>
+    </section>
+    <!-- Hero Section End -->
+
+    <!-- About Section Begin -->
+    <section class="about spad">
         <div class="container">
             <div class="row">
-                <div class="col-lg-12">
-                    <div class="header__top__inner">
-                        {% for message in messages  %}
-                            <div class="alert-box">
-                                <h5>{{message}}</h5>
-                            </div>
-                        {% endfor %}
-                        <div class="header__top__left">
-                            <ul>
-                                
-                                {% if user.is_authenticated %}
-                                    <li><a href={% url 'logout' %}>Log out</a> <span class="arrow_carrot-down"></span></li>
-                                {% else %}
-                                    <li><a href={% url 'login' %}>Log in</a> <span class="arrow_carrot-down"></span></li>
-                                
-                                {% endif %}
-
-
-                            </ul>
-                            {% if user.is_authenticated %}
-                                <div class="profile-pic">
-                                    <img src={% static "img/icon/cart.png" %} alt="">
-                                </div>
-                            
-                                
-                            {% endif %}
-
-                            
+                <div class="col-lg-6 col-md-6">
+                    <div class="about__text">
+                        <div class="section-title">
+                            <span>About Benkiz Bakers!</span>
+                            <h2>Cakes and bakes from the Benkiz Bakers!</h2>
                         </div>
-                        <div class="header__logo">
-                            <a href="/"><img src= {% static 'logo_n_branding/logo.webp' %} alt="LOGO HERE"></a>
+                        <p>Benkiz Bakers! is a Kenyan Brand that started as a small family business. The owners are
+                            Mr.Kizito and Areri Jr, supported by a staff of 12 employees.</p>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <div class="about__bar">
+                        <div class="about__bar__item">
+                            <p>Cake design</p>
+                            <div id="bar1" class="barfiller">
+                                <div class="tipWrap" style="display: inline;"><span class="tip" style="left: 395.469px; transition: left 2s ease-in-out 0s;">95%</span></div>
+                                <span class="fill" data-percentage="95" style="background: rgb(17, 17, 17); width: 427.5px; transition: width 2s ease-in-out 0s;"></span>
+                            </div>
                         </div>
-                        {% if user.is_authenticated %}
-                            <div class="header__profile">
-                                <a href= {% url "profile"  %} ><img src="img/logo.png" alt="Profile"></a>
+                        <div class="about__bar__item">
+                            <p>Cake Class</p>
+                            <div id="bar2" class="barfiller">
+                                <div class="tipWrap" style="display: inline;"><span class="tip" style="left: 327.969px; transition: left 2s ease-in-out 0s;">80%</span></div>
+                                <span class="fill" data-percentage="80" style="background: rgb(17, 17, 17); width: 360px; transition: width 2s ease-in-out 0s;"></span>
                             </div>
-                        {% endif %}
-                       
-                        <div class="header__top__right">
-                            <div class="header__top__right__links">
-                                <a href="#" class="search-switch"><img src="img/icon/search.png" alt=""></a>
-                                <a href="#"><img src="img/icon/heart.png" alt=""></a>
+                        </div>
+                        <div class="about__bar__item">
+                            <p>Cake Recipes</p>
+                            <div id="bar3" class="barfiller">
+                                <div class="tipWrap" style="display: inline;"><span class="tip" style="left: 372.969px; transition: left 2s ease-in-out 0s;">90%</span></div>
+                                <span class="fill" data-percentage="90" style="background: rgb(17, 17, 17); width: 405px; transition: width 2s ease-in-out 0s;"></span>
                             </div>
-                            {% if user.is_authenticated %}
-                            {% if cart.counting > 0 %}
-                                
-                                    <a href={% url 'checkout' %}>
-                                        <div class="header__top__right__cart">
-                                        <img src="" alt="">
-                                            <span>{{cart.counting}}</span>
-                                        <div class="cart__price">Cart: <span>Shs. {{cart.total}}</span></div>
-                                    </div>
-                                    </a>
-                                    
-                               
-                            {% endif %}
-                            
-                            {% endif %}
-                            {% if user.is_authenticated is not True %}
-                              <div class="registration-block">
-                                <a href= {% url "register" %}>
-                                    <button><h5>Register</h5></button>
-                                </a>
-                            </div>
-                            {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="canvas__open"><i class="fa fa-bars"></i></div>
         </div>
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <nav class="header__menu mobile-menu">
-                    <ul>
-                        <li><a href="/">Home</a></li>
-                        <li class="active"><a href={% url 'about' %}>About</a></li>
-                        <li><a href={% url 'shop' %}>Shop</a></li>
-                        <li><a href="#">Pages</a>
-                            <ul class="dropdown">
-                                <li><a href={% url 'shopdetails' %}>Shop Details</a></li>
-                                <li><a href={% url 'shoppingcart' %}>Shoping Cart</a></li>
-                                <li><a href={% url 'checkout' %}>Check Out</a></li>
-                                <li><a href={% url 'wishlist' %}>Wishlist</a></li>
+    </section>
+    <!-- About Section End -->
 
-
-                                <li><a href={% url 'Class' %}>Class</a></li>
-                                <li><a href={% url 'gallery' %}>Gallery</a></li>
-                                <li><a href={% url 'blogdetails' %}>Blog Details</a></li>
-                            </ul>
-                        </li>
-                        <li><a href={% url 'blog' %}>Blog</a></li>
-                        <li><a href={% url 'contact' %}>Contact</a></li>
-                    </ul>
-                </nav>
+    <!-- Categories Section Begin -->
+    <div class="categories">
+        <div class="container">
+            <div class="row">
+                <div class="categories__slider owl-carousel owl-loaded owl-drag">
+                    
+                    
+                    
+                    
+                    
+                    
+                <div class="owl-stage-outer"><div class="owl-stage" style="transform: translate3d(-952px, 0px, 0px); transition: all 0s ease 0s; width: 3332px;"><div class="owl-item cloned" style="width: 216px; margin-right: 22px;"><div class="categories__item">
+                        <div class="categories__item__icon">
+                            <span class="flaticon-005-pancake"></span>
+                            <h5>Red Velvet</h5>
+                        </div>
+                    </div></div><div class="owl-item cloned" style="width: 216px; margin-right: 22px;"><div class="categories__item">
+                        <div class="categories__item__icon">
+                            <span class="flaticon-030-cupcake-2"></span>
+                            <h5>Biscuit</h5>
+                        </div>
+                    </div></div><div class="owl-item cloned" style="width: 216px; margin-right: 22px;"><div class="categories__item">
+                        <div class="categories__item__icon">
+                            <span class="flaticon-006-macarons"></span>
+                            <h5>Donut</h5>
+                        </div>
+                    </div></div><div class="owl-item cloned" style="width: 216px; margin-right: 22px;"><div class="categories__item">
+                        <div class="categories__item__icon">
+                            <span class="flaticon-006-macarons"></span>
+                            <h5>Cupcake</h5>
+                        </div>
+                    </div></div><div class="owl-item active" style="width: 216px; margin-right: 22px;"><div class="categories__item">
+                        <div class="categories__item__icon">
+                            <span class="flaticon-029-cupcake-3"></span>
+                            <h5>Cupcake</h5>
+                        </div>
+                    </div></div><div class="owl-item active" style="width: 216px; margin-right: 22px;"><div class="categories__item">
+                        <div class="categories__item__icon">
+                            <span class="flaticon-034-chocolate-roll"></span>
+                            <h5>Butter</h5>
+                        </div>
+                    </div></div><div class="owl-item active" style="width: 216px; margin-right: 22px;"><div class="categories__item">
+                        <div class="categories__item__icon">
+                            <span class="flaticon-005-pancake"></span>
+                            <h5>Red Velvet</h5>
+                        </div>
+                    </div></div><div class="owl-item active" style="width: 216px; margin-right: 22px;"><div class="categories__item">
+                        <div class="categories__item__icon">
+                            <span class="flaticon-030-cupcake-2"></span>
+                            <h5>Biscuit</h5>
+                        </div>
+                    </div></div><div class="owl-item" style="width: 216px; margin-right: 22px;"><div class="categories__item">
+                        <div class="categories__item__icon">
+                            <span class="flaticon-006-macarons"></span>
+                            <h5>Donut</h5>
+                        </div>
+                    </div></div><div class="owl-item" style="width: 216px; margin-right: 22px;"><div class="categories__item">
+                        <div class="categories__item__icon">
+                            <span class="flaticon-006-macarons"></span>
+                            <h5>Cupcake</h5>
+                        </div>
+                    </div></div><div class="owl-item cloned" style="width: 216px; margin-right: 22px;"><div class="categories__item">
+                        <div class="categories__item__icon">
+                            <span class="flaticon-029-cupcake-3"></span>
+                            <h5>Cupcake</h5>
+                        </div>
+                    </div></div><div class="owl-item cloned" style="width: 216px; margin-right: 22px;"><div class="categories__item">
+                        <div class="categories__item__icon">
+                            <span class="flaticon-034-chocolate-roll"></span>
+                            <h5>Butter</h5>
+                        </div>
+                    </div></div><div class="owl-item cloned" style="width: 216px; margin-right: 22px;"><div class="categories__item">
+                        <div class="categories__item__icon">
+                            <span class="flaticon-005-pancake"></span>
+                            <h5>Red Velvet</h5>
+                        </div>
+                    </div></div><div class="owl-item cloned" style="width: 216px; margin-right: 22px;"><div class="categories__item">
+                        <div class="categories__item__icon">
+                            <span class="flaticon-030-cupcake-2"></span>
+                            <h5>Biscuit</h5>
+                        </div>
+                    </div></div></div></div><div class="owl-nav"><button type="button" role="presentation" class="owl-prev"><span class="arrow_carrot-left"><span></span></span></button><button type="button" role="presentation" class="owl-next"><span class="arrow_carrot-right"><span></span></span></button></div><div class="owl-dots disabled"></div></div>
             </div>
         </div>
     </div>
-</header>
-    {% block body %}
-      
+    <!-- Categories Section End -->
+
+    <!-- Product Section Begin -->
+    <section class="product spad">
+        <div class="container">
+            <div class="row">
+
+                {% for item in items %}
+
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <div class="product__item">
+                            <div class="product__item__pic" >
+                                <div class="product-image">
+                                    <img src='{{ item.thumbnail.url }}' alt="">
+                                </div>
+                                <div class="product__label"> 
+                                    <h3><span>{{ item.name }}</span></h3>
+                                    
+                                </div>
+                            </div>
+                            <div class="product__item__text">
+                                <h6><a href="#">Cookies and Cream</a></h6>
+                                <div class="product__item__price">Shs. {{ item.price }}</div>
+                                <div class="cart_add">
+                                    {% if user.is_authenticated %}
+                                    <a href="{% url 'buyItem' item.id %}">Add to cart</a>
+                                    {% else %}
+                                    <a href={% url 'login' %}>Add to cart</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                {% endfor %}
+                
+            </div>
+        </div>
+    </section>
+    <!-- Product Section End -->
+
+    <!-- Class Section Begin -->
+    <section class="class spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="class__form">
+                        <div class="section-title">
+                            <span>Classy cakes</span>
+                            <h2>Made from your <br>own hands</h2>
+                        </div>
+                        <div class="section-title">
+                            <span>Baking Classes</span>
+                            <p>Join us !</p>
+                        </div>
+
+                        {% if user.is_authenticated %}
+                            <a href={% url 'Class' %}>
+                                <button>
+                                    Attend class
+                                </button>
+                            </a>
+                        {% else %}
+                            <form action={% url 'register' %} >
+                                <button class='register-button' type="submit">Register</button>
+                            </form>
+                        {% endif%}
+
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="class__video set-bg" data-setbg="/media/img/class-video.jpg" style="background-image: url(&quot;/media/img/class-video.jpg&quot;);">
+                <a href="https://www.youtube.com/watch?v=8PJ3_p7VqHw&amp;list=RD8PJ3_p7VqHw&amp;start_radio=1" class="play-btn video-popup"><i class="fa fa-play"></i></a>
+            </div>
+        </div>
+    </section>
+    <!-- Class Section End -->
+
+    <!-- Team Section Begin -->
+    {% include "team.html" %}
+    <!-- Team Section End -->
+
+    <!-- Testimonial Section Begin -->
+    {% include "testimonial.html" %}
+    <!-- Testimonial Section End -->
+
+    <!-- Instagram Section Begin -->
+    {% include "instagramsection.html" %}
+    <!-- Instagram Section End -->
+
+    <!-- Map Begin -->
+    {% include "locationmap.html" %}
+    <!-- Map End -->
+
+    
+    <!-- Search Begin -->
+    <div class="search-model">
+        <div class="h-100 d-flex align-items-center justify-content-center">
+            <div class="search-close-switch">+</div>
+            <form class="search-model-form">
+                <input type="text" id="search-input" placeholder="Search here.....">
+            </form>
+        </div>
+    </div>
+    
+    
     {% endblock body %}
+
+
+    <!-- Footer Section Begin -->
+    {% include "footer.html" %}
+    <!-- Footer Section End -->
 
     {% if user.is_authenticated %}
         <a href="{{ request.META.HTTP_REFERER }}">
             <button type="submit" id="back-button" class="site-btn">Back</button>
         </a>
     {% endif %}
-    
-    
- 
-        
-    
+    <script src={% static "js/jquery-3.3.1.min.js" %}></script>
+    <script src={% static "js/bootstrap.min.js" %}></script>
+    <script src={% static "js/jquery.nice-select.min.js" %}></script>
+    <script src={% static "js/jquery.barfiller.js" %}></script>
+    <script src={% static "js/jquery.magnific-popup.min.js" %}></script>
+    <script src={% static "js/jquery.slicknav.js" %}></script>
+    <script src={% static "js/owl.carousel.min.js" %}></script>
+    <script src={% static "js/jquery.nicescroll.min.js" %}></script>
+    <script src={% static "js/main.js" %}></script>
+    <script src={% static "js/benkizmain.js" %} ></script>    
+  
+
 </body>
+
 </html>

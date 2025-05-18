@@ -1,0 +1,15 @@
+{% extends "main.html" %}
+
+{% block title %}
+  Comment
+{% endblock title %}
+
+{% block body %}
+  
+<form action="" method="post">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button class="custombutton" type="submit">Comment</button>
+</form>
+
+{% endblock body %}

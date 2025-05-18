@@ -1,0 +1,129 @@
+<header class="header">
+    <div class="header__top">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="header__top__inner">
+                        {% for message in messages  %}
+                            <div class="alert-box">
+                                <h5>{{message}}</h5>
+                            </div>
+                        {% endfor %}
+                        <div class="header__top__left">
+                            <ul>
+                                
+                                {% if user.is_authenticated %}
+                                    <li><a href={% url 'logout' %}>Log out</a> <span class="arrow_carrot-down"></span></li>
+                                {% else %}
+                                    <li><a href={% url 'login' %}>Log in</a> <span class="arrow_carrot-down"></span></li>
+                                
+                                {% endif %}
+
+                            </ul>
+                            {% if user.is_authenticated %}
+                                <div  class="profile_pic_area">
+                                    <a  class="profile-pic" href= {% url 'profile' %}>
+                                        <img src={{profile.profilepic.url}} alt="/media/profile_pics/default.png">
+                                    </a>
+                                </div>
+                                
+                            {% else %}
+                                <div  class="profile_pic_area">
+                                    <a  class="profile-pic" href= {% url 'register' %}>
+                                        Join Us !
+                                    </a>
+                                </div>
+                            {% endif %}
+
+                        
+                        </div>
+                        <div class="header__logo">
+                            <div>
+                                <img class="header__logoimage" src= '/static/logo_n_branding/logo.webp' alt="LOGO HERE">
+                            </div>
+                            
+                        </div>
+                        {% if user.is_authenticated %}
+                            <div class="header__profile">
+                                <a href= {% url "profile"  %} >
+                                    
+                                </a>
+                            </div>
+                        {% endif %}
+                       
+                        <div class="header__top__right">
+                            <div class="header__top__right__links">
+                                {% if user.is_authenticated %}
+                                <a href="#" class="search-switch"><img src="/media/img/icon/search.png" alt=""></a>
+                                <a href="#"><img src="/media/img/icon/heart.png" alt=""></a>
+                                {% endif %}
+                                {% if user.is_authenticated is not True %}
+                                    <div class="registration-block">
+                                        <a href= {% url "register" %}>
+                                            <button><h5>Register</h5></button>
+                                        </a>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            
+                            
+
+
+                            {% if user.is_authenticated %}
+                            {% if cart.counting > 0 %}
+                                
+                                    <a href={% url 'checkout' %}>
+                                        <div class="header__top__right__cart">
+                                        <img src="" alt="">
+                                            <span>{{cart.counting}}</span>
+                                            {{cart.calcTotal}}
+                                        <div class="cart__price">Cart: <span>Shs. {{cart.totalcost}}</span></div>
+                                    </div>
+                                    </a>
+                                   
+                               
+                            {% endif %}
+                            
+                            {% endif %}
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="canvas__open"><i class="fa fa-bars"></i></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <nav class="header__menu mobile-menu">
+                    <ul>
+                        <li><a href={% url "home" %}>Home</a></li>
+                        <li class="active"><a href={% url 'about' %}>About</a></li>
+                        <li><a href={% url 'shop' %}>Shop</a></li>
+                        <li><a href={% url 'gallery' %}>Gallery</a></li>
+                        <li><a href="#">Pages</a>
+                            <ul class="dropdown">
+                                {% if user.is_authenticated %}
+                                <li><a href={% url 'shoppingcart' %}>Shoping Cart</a></li>
+                                <li><a href={% url 'checkout' %}>Check Out</a></li>
+                                <li><a href={% url 'wishlist' %}>Wishlist</a></li>
+                                {% endif %}
+                                <li><a href={% url 'shopdetails' %}>Shop Details</a></li>
+
+
+                                <li><a href={% url 'Class' %}>Class</a></li>
+                                
+                                <li><a href={% url 'blogdetails' %}>Blog Details</a></li>
+                            </ul>
+                        </li>
+                        <li><a href={% url 'blog' %}>Blog</a></li>
+                        <li><a href={% url 'contact' %}>Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>

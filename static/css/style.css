@@ -79,10 +79,6 @@ p {
   margin: 0 0 15px 0;
 }
 
-img {
-  max-width: 100%;
-}
-
 input:focus,
 select:focus,
 button:focus,
@@ -166,13 +162,13 @@ ol {
 #back-button {
   border-radius: 8px;
   border: none;
-  box-shadow: black 1px 1px .1px;
-  background-color: red;
+  box-shadow: black 10px 10px 20px;
+  background-color: #e2b35d9c;
   width: 80px;
   height: 50px;
   position:fixed;
-  top: 40%;
-  left: 10%;
+  top: 50%;
+  right: 003%;
 
 }
 
@@ -317,6 +313,26 @@ ol {
   justify-content: center;
 }
 
+/* profile */
+.profile-pic img {
+	width:100%;
+  object-fit:cover;
+	flex-basis:auto;
+	aspect-ratio:1;
+  border-radius:50%;
+}
+
+.profile_pic_area{
+	background-color:transparent;
+	display:flex;
+	align-self:anchor-center;
+	flex-direction:column;
+	object-fit:scale-down;
+	width:6vh;
+	
+}
+/* endprofile */
+
 /*---------------------
   Header
 -----------------------*/
@@ -404,6 +420,10 @@ ol {
   left: 50%;
   top: 25px;
   margin-left: -60px;
+}
+
+.header__logo img {
+	width:20%
 }
 .header__logo a {
   display: inline-block;
@@ -808,12 +828,30 @@ ol {
   background: transparent;
   color: #111111;
 }
+.custombutton {
+  border-radius: 8px;
+  border: none;
+  box-shadow: black 10px 10px 20px;
+  background-color: #e2b35d9c;
+  width: 80px;
+  height: 50px;
+
+
+}
+.custombutton:hover {
+  box-shadow: black 10px 10px 10px;
+}
+.team__item img {
+	border-radius:3%;
+	width:100%;
+}
 
 .team__item {
   height: 360px;
   position: relative;
   overflow: hidden;
   margin-bottom: 30px;
+	
 }
 .team__item:hover .team__item__text {
   opacity: 1;
@@ -886,8 +924,12 @@ ol {
 }
 
 .testimonial__item {
-  background: #ffffff;
+  background:transparent;
   padding: 40px 45px 35px 50px;
+	border:solid 1px;
+	border-radius:3vh;
+	border-block-color:gray;
+	margin-right:2%;
   position: relative;
 }
 .testimonial__item .rating {
@@ -920,6 +962,7 @@ ol {
   height: 70px;
   width: 70px;
   border-radius: 50%;
+  aspect-ratio:1;
 }
 
 .testimonial__author__text {
@@ -1010,6 +1053,7 @@ ol {
           box-shadow: 0 0 10px rgba(223, 223, 224, 0.7);
   padding: 30px 25px 25px;
   position: relative;
+	border-radius:10px;
 }
 .map__inner:after {
   position: absolute;
@@ -1036,6 +1080,7 @@ ol {
   font-size: 14px;
   color: #444444;
   margin-bottom: 10px;
+	
 }
 
 /*---------------------
@@ -1047,6 +1092,13 @@ ol {
 
 .product__item {
   margin-bottom: 40px;
+	display:inline;
+	
+}
+
+.product__item img {
+  width:100%;
+	 border-radius:10px;
 }
 .product__item:hover .product__item__pic .product__label span {
   background: #f08632;
@@ -1179,7 +1231,12 @@ ol {
 }
 .footer__about .footer__logo {
   margin-bottom: 32px;
+
 }
+.footer__logo img {
+  width: 60%;
+}
+
 .footer__about .footer__logo a {
   display: inline-block;
 }
@@ -1541,6 +1598,19 @@ ol {
 .shop__option__right a:hover {
   color: #888888;
 }
+.shop__pagination {
+	display:flex;
+	flex-direction:row;
+	justify-content:space-around;
+	
+}
+
+.shop__pagination button {
+	margin-left:100px;
+	margin-right:100px;
+
+	
+}
 
 .shop__pagination a {
   display: inline-block;
@@ -1754,6 +1824,7 @@ ol {
 
 .related__products__slider.owl-carousel .col-lg-3 {
   max-width: 100%;
+	
 }
 .related__products__slider.owl-carousel .owl-nav button {
   font-size: 30px;
@@ -2088,6 +2159,11 @@ ol {
   padding-bottom: 25px;
   margin-bottom: 30px;
 }
+
+.checkout__order{
+	border-top-left-radius:30px;
+	border-bottom-right-radius:30px;
+}
 .checkout__order p {
   color: #444444;
   font-size: 16px;
@@ -2206,6 +2282,10 @@ ol {
   font-size: 16px;
   font-weight: 600;
   width: 180px;
+}
+.product__cart__item__pic img{
+	width:15vh;
+	border-radius:5px;
 }
 .wishlist__cart__table table tbody tr td.cart__stock {
   font-size: 16px;
@@ -4069,6 +4149,24 @@ ol {
   border-color: black;
   background-color: transparent;
   border-radius: 3px;
+}
+#id_body {
+	height:10vh;
+	width:80%;
+	border:solid 1px black;
+	border-radius:1vh;
+	place-content:center;
+	justify-items:center;
+	cursor:pointer;
+	box-shadow:10px 10px 30px;
+	transition:.2s;
+}
+
+#id_body:active {
+	box-shadow:10px 10px 10px;
+}
+#id_body:hover {
+	box-shadow:10px 10px 10px;
 }
 
 /* my code ends here */

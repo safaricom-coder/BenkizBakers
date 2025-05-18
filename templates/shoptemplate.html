@@ -1,0 +1,118 @@
+<div class="row">
+
+    {% for item in things  %}
+        {% if item.numberOfItems > 0 %}
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <form action="{% url 'buyItem' item.id %}" method="post">
+                    {% csrf_token %}
+                    
+                    
+                        <div class="product__item">
+                            <div class="product__item__pic">
+                                <div class="product-image">
+                                    <!-- <img src="/media/item_pics/product-1.jpg" alt=""> -->
+
+                                    <img class="thumbnail-image" src={{ item.thumbnail.url}} alt="">
+                                </div>
+                                <div class="product__label"> 
+                                    <h3><span>{{item.name}}</span></h3>
+                                    
+                                </div>
+                            </div>
+                            <div class="product__item__text">
+                                <h6><a href="#">{{item.name}}</a></h6>
+                                <div class="product__item__price">Shs. {{item.price}}</div>
+                                {% if user.is_authenticated %}
+                                    <div class="cart_add">
+                                        <button type="submit">Add to cart</button>
+                                    </div>
+                                
+                        
+                                {% else %}
+                                    <div class="cart_add">
+                                        <a href={% url 'login' %}>
+                                            Log in to Order !
+                                        </a>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    
+
+
+
+                    
+                </form>
+                
+                <div class="cart_add">
+                    
+                        <div class="product__item">
+                            <a href={% url 'addToWishlist' item.id %}>
+                                <button class="custombutton" type="submit">Add to Wishlist</button>
+                            </a>
+                        </div>
+                                                        
+                </div>
+            </div>
+        {% elif item.numberOfItems == 0 %}
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                    
+                        <div class="product__item">
+                            <div class="product__item__pic">
+                                <div class="product-image">
+                                    <!-- <img src="/media/item_pics/product-1.jpg" alt=""> -->
+
+                                    <img class="thumbnail-image" src={{ item.thumbnail.url}} alt="">
+                                </div>
+                                <div class="product__label"> 
+                                    <h3><span>DOZEN CUPCAKES</span></h3>
+                                    
+                                </div>
+                            </div>
+                            <div class="product__item__text">
+                                <h6><a href="#">{{item.name}}</a></h6>
+                                <div class="product__item__price">Shs. {{item.price}}</div>
+                                <div class="cart_add">
+                                    <button type="submit">Out of Stock !</button>
+                                </div>
+                            </div>
+                        </div>
+                    
+
+            </div>
+        {% endif %}
+    
+    {% endfor %}
+
+</div>
+
+{% if is_paginated %}
+  
+<div class="shop__last__option">
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <div class="shop__pagination">
+               
+                {% if page_obj.has_next %}
+                    <a href="?page={{page_obj.next_page_number}}">Next</a>
+                {% endif %}
+                {% if page_obj.has_previous %}
+                    <a href="?page={{page_obj.last_page_number}}">Last</a>
+                {% endif %}
+                    <a href="?page=1">1</a>
+                    <a href="?page=2">2</a>
+                {% if page_obj.has_previous %}
+                    <a href="?page={{page_obj.previous_page_number}}">Prev</a>
+                {% endif %}
+                <!-- <a href="#"><span class="arrow_carrot-right"></span></a> -->
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <div class="shop__last__text">
+                <p>Showing {{things.count}}  out of {{items.count}} results</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endif %}
