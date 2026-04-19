@@ -8,12 +8,14 @@ import os
 
 
 from dotenv import load_dotenv
-load_dotenv()
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv(BASE_DIR / ".env")
 
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.getenv('CLOUD_NAME_CLOUDINARY'),
-    'API_KEY': os.getenv('API_KEY_CLOUDINARY'),
-    'API_SECRET': os.getenv('API_SECRET_CLOUDINARY'),
+    'CLOUD_NAME': os.environ.get('CLOUD_NAME_CLOUDINARY', ''),
+    'API_KEY': os.environ.get('API_KEY_CLOUDINARY', ''),
+    'API_SECRET': os.environ.get('API_SECRET_CLOUDINARY', ''),
 }
 if not all(CLOUDINARY_STORAGE.values()):
     print("⚠️ Cloudinary not fully configured")
