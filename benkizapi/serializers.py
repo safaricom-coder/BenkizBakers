@@ -3,12 +3,18 @@ from main.models import *
 from benkizapi.models import *
 from django.contrib.auth.models import User
 
+class CakeCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CakeCategory
+        fields = ["id", "name"]
+
 
 class ItemSerializer(serializers.ModelSerializer):
+    category = CakeCategorySerializer(many=True, read_only=True)
+
     class Meta:
         model = Item
         fields = "__all__"
-
 
 class CartItemSerializer(serializers.ModelSerializer):
     class Meta:
