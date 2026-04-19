@@ -1,0 +1,228 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<header class="header">
+    <div class="header__top">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 headerbar">
+                    <div class="header__top__inner">
+                        {% for message in messages  %}
+                        <div class="alert-box">
+                            <h5>{{message}}</h5>
+                        </div>
+                        {% endfor %}
+
+                        <div class="header__top__left">
+                            <ul>
+
+                                {% if user.is_authenticated %}
+                                    <a href={% url 'logout' %}><button class="site-button2 mobile-nav">Log out</button></a>
+                                {% else %}
+                                    <a href={% url 'login' %}><button class="site-button2 mobile-nav">Log in </button></a>
+
+                                {% endif %}
+
+                            </ul>
+                            <div class="themer">
+                                <i id="themeToggle" style='font-size: 30px;' class="themeButton cursor_pointer fa fa-moon-o" aria-label="Toggle theme"></i>
+
+                            </div>
+                            <div class="mobile_header_center">
+
+                                {% if user.is_authenticated %}
+    
+                                    <a href={% url 'profile' %} >
+    
+                                        <div  class="profile_pic_area set-bg" data-setbg={{profile.profilepic.url}} style="background-image: url({{profile.profilepic.url}});">
+                                        </div>
+                                    </a>
+                                {% else %}
+                                    <div  class="">
+                                        <a href="tel:+254795404843">
+                                            <button class="themer-btn-active">0795404843</button>
+                                        </a>
+                                    </div>
+    
+                                {% endif %}
+                            </div>
+
+
+                        </div>
+
+                        <div class="header__logo">
+                            
+                            <img class="header__logoimage" src= '/static/logo_n_branding/logo.webp' alt="BenkizBakers Logo">
+                            
+                        </div>
+                        
+                        
+                        <div class="header__top__right">
+                            <div class="header__top__right__links">
+                                {% if user.is_authenticated %}
+                                <a href="#" class="search-switch"><i style='font-size: 30px;' class="fa fa-search"></i></a>
+                                {% endif %}
+                                {% if user.is_authenticated is not True %}
+                                    <div class="registration-block">
+                                        <a href= {% url "register" %}>
+                                            <button class="site-button2"><h5>Register</h5></button>
+                                        </a>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+
+
+
+
+                            {% if user.is_authenticated %}
+                            {% if cartitemscount > 0 %}
+
+                            <div class="header__top__right__links">
+                                <a href="/shoppingcart">
+                                    <div class="checkout__count">
+                                        <span>{{numberofcartitems}}</span>
+                                    </div>
+                                    <i style='font-size: 30px;' class="fa fa-shopping-cart"></i>
+                   
+                                </a>
+                            </div>
+
+                                        <div class="header__top__right__cart">
+                                            {{cart.calcTotal}}
+                                        <a href="/checkout">
+                                            <button class="custombutton">Shs. {{cart.totalcost}}</button>
+                                        </a>
+                                    </div>
+                                
+
+
+                            {% endif %}
+
+                            {% endif %}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="canvas__open"><i style='font-size: 30px;' class="fa fa-bars"></i></div>
+        </div>
+    </div>
+
+    <div class="header__bottom">
+        <div class="row">
+            <div class="col-lg-12">
+                <nav class="header__menu mobile-menu">
+                    <ul class="header__menu__ul">    
+                        <li><a href={% url "home" %}>Home</a></li>
+                        <li><a href={% url 'shop' %}>Shop</a></li>
+                        {% if user.is_staff %}
+                        <li><a href={% url 'super-su' %}>Super SU</a></li>
+                        {% endif %}
+                        {% if profile.is_normal_admin %}
+                        <li><a href='/adminpanel/menu'>Admin Panel</a></li>
+                        {% endif %}
+                        <li><a href={% url 'gallery' %}>Gallery</a></li>
+                        {% if user.is_authenticated %}
+                            <li class='dropdown'><a href="#">Pages</a>
+                                <ul class="dropdown">
+                                    <li><a href={% url 'shoppingcart' %}>*<i class ="fa fa-shopping-cart">Cart</i></a></li>
+                                    <li><a href={% url 'checkout' %}>*<i class="fa fa-check-circle-o">Checkout</i></a></li>
+                                    <li><a href={% url 'wishlist' %}>*<i class="fa fa-heart">Wishlist</i></a></li>
+                                    <li><a href="/class/menu">*<i class="fa fa-graduation-cap">Classes</i> </a></li>
+                                    
+        
+
+
+                                    <!-- <li><a href={% url 'blog' %}>Blog</a></li> -->
+                                    <!-- <li><a href='/blogdetails/'>Blog Details</a></li> -->
+                                </ul>
+                            </li>
+                        {% else %}
+                            <li><a href="/class/menu">Class </a></li>
+                        {% endif %}
+                        <li><a href={% url 'contact' %}>Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<!-- search functionality  -->
+<div class="search-model">
+    <div class="h-100 d-flex align-items-center justify-content-center">
+        <div class="search-close-switch">+</div>
+        <form action={% url "searchitem" %} method="get" class="search-model-form">
+            <input name="query" type="text" id="search-input" placeholder="Search here.....">
+        </form>
+    </div>
+</div>
+<!-- end search functionality -->
+
+<!-- Offcanvas Menu Begin -->
+
+
+
+<div class="offcanvas-menu-overlay"></div>
+<div class="offcanvas-menu-wrapper">
+    <div class="offcanvas__cart normal_background">
+        
+        <div class="offcanvas__cart__links">
+            <form action={% url "searchitem" %} method="get" class="search-model-form-mobile">
+                <div id="search_icon_mobile">
+                    <i style='font-size: 30px;' class="fa fa-search"></i>
+                    <input name="query" type="text" id="search-input">
+                </div>
+            </form>
+    
+        </div>
+        <div>
+            <div class="offcanvas__cart__item">
+                <a href={% url 'shoppingcart' %}>
+                <div class="primarybutton">
+                    <i style='font-size: 30px;' class="fa fa-shopping-cart"></i>
+                </div>
+                <div class="small_border">
+                    {{numberofcartitems}}
+                </div> 
+                </a>
+                <div class="cart__price">Cart : Shs. {{cart.totalcost}}</div>
+            </div>
+        </div>
+    </div>
+    <div class="offcanvas__logo">
+        <a href={% url 'home' %}><img class="mobilelogo" src="/static/logo_n_branding/logo.webp" alt="BenkizBakers Logo"></a>
+        {% if user.is_authenticated %}
+            <a href="/profile">
+                <div  class="profile_pic_area_mobile set-bg" data-setbg={{profile.profilepic.url}} style="background-image: url({{profile.profilepic.url}});"></div>
+            </a>
+        {% endif %}
+        <div class="themer">
+            <i style='font-size: 30px;' class="themeButton  cursor_pointer fa fa-moon-o"></i>
+
+        </div>
+    </div>
+
+
+        <ul>
+
+            {% if user.is_authenticated %}
+                <a href={% url 'logout' %}><button class="site-button2">Log out</button></a>
+            {% else %}
+                <a href={% url 'login' %}><button class="site-button2">Log in </button></a>
+
+            {% endif %}
+
+        </ul>
+
+
+    <div id="mobile-menu-wrap">
+
+    </div>
+
+</div>
+
+
+<!-- Offcanvas Menu End -->

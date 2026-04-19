@@ -1,0 +1,78 @@
+{% extends "main.html" %}
+
+{% block title %}
+  Create Profile
+{% endblock title %}
+
+{% block body %}
+<div class="body2">
+  <div class="form-container">
+  
+    <div class="formsetting">
+      <form class="form" action= {% url "updateprofile" %} method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button class="custombutton" type="submit">Update Profile</button>
+    </form>
+    </div>
+  
+  
+    <div class="formsetting hidden">
+      <form class="form" action="/updatesocials/{{user.id}}" method="post">
+        {% csrf_token %}
+        <p><button class="custombutton">Your Social Links</button></p>
+        <p><label for="facebook" >Facebook</label></p>
+  
+        {% if usersocials.facebook is None %}
+        <p><input type="text" name="facebook"></p>
+        {% else %}
+        <p><input value="{{usersocials.facebook}}" type="text" name="facebook"></p>
+        {% endif %}
+  
+        <p><label for="twitter">Twitter</label></p>
+        {% if usersocials.twitter  is None %}
+        <p><input type="text" name="twitter"></p>
+        {% else %}
+        <p><input value="{{usersocials.twitter}}" type="text" name="twitter"></p>
+        {% endif %}
+  
+        <p><label for="instagram">Instagram</label></p>
+        {% if usersocials.instagram  is None %}
+        <p><input type="text" name="instagram"></p>
+        {% else %}
+        <p><input value="{{usersocials.instagram}}" type="text" name="instagram"></p>
+        {% endif %}
+  
+        <p><label for="youtube">Youtube</label></p>
+        {% if usersocials.youtube  is None  %}
+        <p><input type="text" name="youtube"></p>
+        {% else %}
+        <p><input value="{{usersocials.youtube}}" type="text" name="youtube"></p>
+        {% endif %}
+  
+        <button type="submit" class="custombutton">Update</button>
+      </form>
+  
+        
+    </div>
+    <i style="font-size:20px;" class="showmore cursor_pointer fa fa-arrow-down"></i>
+  
+  </div>
+</div>
+
+<script type="module">
+  const showmore = document.querySelector('.showmore')
+  let profileSettings = document.querySelectorAll('.formsetting')
+  showmore.addEventListener('click',()=>{
+    profileSettings.forEach((profileSetting)=>{
+
+      if(profileSetting.classList.contains('hidden')){
+        profileSetting.classList.remove('hidden')
+      }else{
+        profileSetting.classList.add('hidden')
+      }
+    })
+  })
+</script>
+
+{% endblock body %}

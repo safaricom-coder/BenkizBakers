@@ -1,0 +1,95 @@
+<div class="row shop-row">
+        
+{% if things.count >= 1 %}
+{% for item in object_list  %}
+    {% if item.numberOfItems > 0 %}
+        <div class="col-lg-3 col-md-6 col-sm-6 productdiv">
+            <div class="product__item">
+
+                <div class="add_to_wishlist_box">
+                    {% if user.is_authenticated %}
+
+                    
+                        {% if item.is_wished  %}
+                            {% for wishitem in wishitems %}
+                                {% if wishitem.item == item  %}
+                                    <button class="custombutton fa fa-heart"><a href={% url 'removewishitem' item.id %}>
+                                    </a></button>
+                                {% endif %}
+                            {% endfor %}
+
+                        {% else %}
+                            <a href={% url 'addToWishlist' item.id %}>
+                                <button class="custombutton icon_heart_alt"></button>
+                            </a>
+                        {% endif %}
+                    {% else %}
+                        <a href={% url 'addToWishlist' item.id %}>
+                            <button class="custombutton icon_heart_alt"></button>
+                        </a>
+                    {% endif %}
+                    
+                </div>
+                
+                <a href={% url "productdetails" item.id %}>
+                    <div class="product__item__pic set-bg set-bg-row" data-setbg={{item.thumbnail.url}} style="background-image: url(&quot;{{item.thumbnail.url}}&quot;);">
+                    <div class="product__label">
+                        <span>{{item.category}}</span>
+                    </div>
+                </div>
+                </a>
+                <div class="product__item__text">
+                    <h6><a href="#">{{item.name}}</a></h6>
+                    <div class="product__item__price">Shs. {{item.price}}</div>
+                    <div class="cart_add">
+                        <a href={% url 'buyItem' item.id %}>Add to cart</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% elif item.numberOfItems == 0 %}
+        
+    {% endif %}
+
+{% endfor %}
+{% else %}
+    {% include "nocontent.html" %}
+{% endif %}
+
+
+        
+</div>
+
+
+{% if is_paginated %}
+
+<div class="shop__last__option">
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <div class="shop__pagination">
+               
+                <a href="?page=1"><button class="site-btn">First</button></a>
+                {% if page_obj.has_previous %}
+                    <a href="?page={{page_obj.previous_page_number}}"><button class="site-btn">Prev</button></a>
+                {% endif %}
+                {% if page_obj.has_next %}
+                    <a href="?page={{page_obj.next_page_number}}"><button class="site-btn">Next</button></a>
+                {% endif %}
+                
+                <a href="?page={{page_obj.paginator.num_pages}}"><button class="site-btn">Last</button></a>
+            
+               
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <div class="shop__last__text">
+                <p>Showing {{things.count}} result(s)</p>
+                <p>Page {{page_obj.number}} of {{page_obj.paginator.num_pages}}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+
+{% endif %}

@@ -1,0 +1,33 @@
+{% extends "main.html" %}
+
+{% block title %}
+  Create Blog
+{% endblock title %}
+
+{% block body %}
+<div class="body">
+  <div class="form-container">
+    <form class="form" action="/postblog/" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="text" name="blogtitle" id="blogtitle" placeholder="Your Blog Title" required>
+        <input type="text" class="blogfield" id="blogcontent" name="blogcontent" placeholder="Content" required>
+        <label for="cover_pic">
+          Select image (preferably a landscape one over a portrait one)
+        </label>
+        <input type="file" id="cover_pic" name="cover_pic" accept=".jpg,.jpeg,.png" required>
+        <button class="submit-blog" type="submit">Post Blog</button>
+    </form>
+  </div>
+</div>
+
+    <script>
+      const blogfield = document.querySelector('.blogfield')
+
+      blogfield.addEventListener('keyup',(event)=>{
+          if (event.key == 'Enter'){
+            event.preventDefault();
+            console.log('enter was pressed')
+          }
+      })
+    </script>
+{% endblock body %}

@@ -1,0 +1,87 @@
+{% extends "main.html" %}
+
+{% block title %}
+  Comment
+{% endblock title %}
+
+{% block body %}
+  
+
+
+
+
+<div class="body">
+
+  <div class="form-container">
+      <div class="toggle-buttons">
+          <button class="hidden" id="showLogin hidden">Comment</button>
+          <button id="showRegister">Rate</button>
+      </div>
+      <div id="loginForm" class="form">
+          <h5>Comment</h5>
+            <form action="/createcomment/" method="post">
+                {% csrf_token %}
+                <p>
+                  <textarea class="textbody" name="textbody" ></textarea>
+                </p>
+                <button class="custombutton" type="submit">Comment</button>
+            </form>
+          <p id="loginMessage"></p>
+      </div>
+      <div id="registerForm" class="form hidden">
+          <h5>Rate</h5>
+
+          <form class="" action='/rate/1' method="post">
+              {% csrf_token %}
+              
+              <button type="submit">
+                  <span class="icon_star"></span>
+              </button>
+          </form>
+          <form class="" action='/rate/2' method="post">
+              {% csrf_token %}
+              
+              <button type="submit">
+                  <span class="icon_star"></span>
+                  <span class="icon_star"></span>
+              </button>
+          </form>
+          <form class="" action='/rate/3' method="post">
+              {% csrf_token %}
+              
+              <button type="submit">
+                  <span class="icon_star"></span>
+                  <span class="icon_star"></span>
+                  <span class="icon_star"></span>
+              </button>
+          </form>
+          <form class="" action='/rate/4' method="post">
+              {% csrf_token %}
+              
+              <button type="submit">
+                  <span class="icon_star"></span>
+                  <span class="icon_star"></span>
+                  <span class="icon_star"></span>
+                  <span class="icon_star"></span>
+              </button>
+          </form>
+          <form class="" action='/rate/5' method="post">
+              {% csrf_token %}
+              
+              <button type="submit">
+                  <span class="icon_star"></span>
+                  <span class="icon_star"></span>
+                  <span class="icon_star"></span>
+                  <span class="icon_star"></span>
+                  <span class="icon_star"></span>
+              </button>
+          </form>
+          <p id="registerMessage"></p>
+      </div>
+  </div>
+
+</div>
+
+<script  src="/static/js/loginscript.js"></script>
+
+{% endblock body %}

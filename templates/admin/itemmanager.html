@@ -1,0 +1,201 @@
+{% extends "../main.html" %}
+<html>
+{% block title %}
+ Item Manager
+{% endblock title %}
+
+{% block body %}
+    {% include "../breadcrumb.html" %}
+<div class="body3" >
+
+
+    <div id="grid-container">
+
+        <div class="grid1">
+            <div class="lid form-container hidden">
+                <div class="form">
+                    <form  action="/additem/" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <input type="text" name="itemName" placeholder="Item Name" required>
+                        <br>
+                        <br>
+                        <textarea class="textbody" name="itemDescription" required>Description</textarea>
+                        <br>
+                        <br>
+                        <textarea class="textbody" name="additionalinfo" >Additional Info</textarea>
+                        <br>
+                        <br>
+                        <input type="file" name="itemThumbnail" accept="image/*" required>
+                        <br>
+                        <br>
+                        <input type="text" name="numberOfItems" placeholder="Number of items" required>
+                        <br>
+                        <br>
+                        <label for="types">Cake Category</label>
+                        <select name="cakeCategory" id="types" size="4" multiple>
+                            <option value="Red Velvet">Red Velvet</option>
+                            <option value="Cup Cake">Cupcake</option>
+                            <option value="Biscuit">Biscuit</option>
+                            <option value="Cookies">Cookies</option>
+                            <option value="All">All</option>
+                            <option value="Wedding">Wedding</option>
+                            <option value="Macarons">Macarons</option>
+                            <option value="Cake">Cake</option>
+                            <option value="Anniversary Cake">Anniversary Cake</option>
+                            <option value="Birthday Cake">Birthday Cake</option>
+                        </select>
+    
+                        <input type="text" name="itemPrice" placeholder="Item Price" required>
+                        <br>
+                        <br>
+                        <button class="custombutton">Create Item</button>
+                    
+                    </form>
+                </div>
+            </div>
+            
+
+            <div class="">
+
+                
+                {% for item in items  %}
+    
+                    <div id="{{item.id}}" class="lid form-container itemToMod hidden">
+                        <form class="form"  action="/modifyitem/{{item.id}}" method="post" >
+                            {% csrf_token %}
+                                <label  for="namefield">Name</label>
+                                <input id="namefield" type="text" name="name" value="{{item.name}}"> <hr>
+                                <label for="description">Description</label>
+                                <textarea id="textbody" class="textbody" type="text" name="description" >{{item.description}}</textarea><hr>
+                                <label for="additionalinfo">Additional Info</label>
+                                <textarea id="additionalinfo" class="textbody" type="text" name="additionalinfo" >{{item.additionalinfo}}</textarea><hr>
+                                <label for="price">Price</label>
+                                <input id="pricefield" type="text" name="price" value="{{item.price}}"><hr>
+                                <label for="number">Number In Stock</label>
+                                <input id="numberitemfield" type="text" name="number" value="{{item.numberOfItems}}"><hr>
+                                <div id="categoryfield" type="text" name="price" value="{{item.category}}">Current Category : {{item.category}}</div><hr>
+                                <label  for="categories">Categories</label>
+                                <select  name="itemcategory" id="categories"  >
+                                    <option value="birthdaycake">Birthday Cake</option>
+                                    <option value="redvelvet">Red Velvet</option>
+                                    <option value="cupcake">Cupcake</option>
+                                    <option value="biscuit">Biscuit</option>
+                                    <option value="cookies">Cookies</option>
+                                    <option value="all">All</option>
+                                    <option value="wedding">Wedding</option>
+                                    <option value="macarons">Macarons</option>
+                                    <option value="cake">Cake</option>
+                                    <option value="anniversarycake">Anniversary Cake</option>
+                                </select>
+                            
+                            <button id="{{item.id}}"  class="submitbutton" type="submit">Make Changes</button>
+                        </form>
+                    </div>
+                    <br>
+                    <br>
+                {% endfor %}
+            </div>
+    
+            
+        </div>
+        <div class="grid2">
+            <div class="table-container">
+                <div class="one-liner-container">
+                    <button id="addItemButton" class="site-btn">Add Item</button>
+                    {% if user.is_superuser %}
+                    <form class="apimanager" method="post">
+                        {% csrf_token %}
+                        <button class="deleteitemdatabase" type="submit">Delete all API Data ?</button>
+                    </form>
+                    {% endif %}
+
+                    
+                    <br>
+                    <br>
+                    <br>
+                </div>
+                <table class="table" style="border: none;">
+                    <tr>
+            
+                        <thead>
+                            <th><p>No.</p></button></th>
+                            <th><p>Thumbnail</p></button></th>
+                            <th><p>Price</p></th>
+                            <th><p>Remaining</p></th>
+                            <th><p>Sold</p></th>
+                            <th><p>Options</p></button></th>
+                        </thead>
+                    </tr>
+            
+                    {% for item in items  %}
+                    <tbody>
+            
+                        <tr>
+                            <td class="tablecell">{{forloop.counter}}</td>
+                            <td class="tablecell product__cart__item">
+                                <div class="product__cart__item__pic">
+                                    <img src={{item.thumbnail.url}} alt={{item.name}}>
+                                </div>
+                                <div class="product__cart__item__text">
+                                    <h6 class="cartitem">{{item.name}}</h6>
+                                    
+                                </div>
+                            </td>
+                            <td class="tablecell" ><h5>Ksh {{item.price}}</h5></td>
+                            <td class="tablecell" >{{item.numberOfItems}}</td>
+                            <td class="tablecell" >{{item.soldUnits}}</td>
+                            <td class="tablecell" >
+                                <a href="/deleteitem/{{item.id}}">
+                                    <button class="custombutton">Remove Item</button>
+                                </a>
+                                <a href="/modifyitem/{{item.id}}"></a>
+                                <button id="{{item.id}}" class="custombutton  modifyItemButton id{{item.id}}">Modify Item</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                    
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded',()=>{
+        let productionurl='https://safariocom.pythonanywhere.com/api/deleteallitems/'
+        let url='http://127.0.0.1:8000/api/deleteallitems/'
+
+        const deleteitemdatabase = document.querySelector('.deleteitemdatabase')
+        deleteitemdatabase.addEventListener('click',()=>{
+            fetch(url, {
+                method: 'DELETE',
+                    'headers': {
+                    'Content-Type':'application/json',
+                    'X-CSRFToken':'{{csrf_token}}'
+                },
+                })
+                .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Failed to delete data');
+                }
+                })
+                .then(data => {
+                console.log('Success:', data);
+                })
+                .catch(error => {
+                console.error('Error:', error);
+                });
+
+        })
+    })
+</script>
+{% endblock body %}
+
+{% include "../footer.html" %}
+
+</html>

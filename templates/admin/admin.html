@@ -1,0 +1,27 @@
+{% extends "../main.html" %}
+{% block header %}
+  {% include "../header.html" %}
+{% endblock header %}
+
+{% block title %}
+  Admin Panel
+{% endblock title %}
+
+{% block body %}
+    {% include "../breadcrumb.html" %}
+    <br>
+    <br>
+    <a href="/adminpanel/itemmanager"><button class="site-btn">Manage Items</button></a>
+    
+    <br>
+    <br>
+    <a href="/adminpanel/accountmanager"><button class="site-btn">Manage Accounts</button></a>
+    
+    <br>
+    <br>
+
+    
+
+{% endblock body %}
+
+{% include "../footer.html" %}

@@ -1,0 +1,94 @@
+{% extends "main.html" %}
+
+{% block title %}
+  Shop
+{% endblock title %}
+
+
+{% block body %}
+
+    <!-- Page Preloder -->
+
+
+    <!-- <div id="preloder">
+        <div class="loader"></div>
+    </div> -->
+
+
+    <!-- Breadcrumb Begin -->
+    <div class="breadcrumb-option">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="breadcrumb__text">
+                        <h2>Shop</h2>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="breadcrumb__links">
+                        <a href={% url 'home' %}>Home</a>
+                        <span>Shop</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Breadcrumb End -->
+
+    <!-- Shop Section Begin -->
+    <section class="shop spad">
+        <div class="container">
+            <div class="shop__option">
+                <div class="row">
+                    <div class="col-lg-7 col-md-7">
+                        <div class="shop__option__search">
+                            {% if categories.count > 0 %}
+                                <p class='categories-title'>Categories</p>
+                                <hr>
+                            {% endif %}
+
+                            <div class='categorybtnbox'>
+                                {% for category in categories  %}
+                                    <a href="{% url "searchitem" %}?q={{category}}">
+                                        <button class='categorybtn {{category}}-btn'>{{category}}</button>
+                                    </a>
+                                {% endfor %}
+                            </div>
+
+                            <form action='{% url "searchitem" %}' method='get'>
+                                
+                                <input class='form-container' type="text" name='query' placeholder="Search your prefrence ...">
+                                <button type="submit"><i class="fa fa-search"></i></button>
+                            </form>
+                        </div>
+                    </div>
+
+
+                    <!-- <div class="col-lg-5 col-md-5">
+                        <div class="shop__option__right">
+                            <select>
+                                <option value="">Default sorting</option>
+                                <option value="">A to Z</option>
+                                <option value="">1 - 8</option>
+                                <option value="">Name</option>
+                            </select>
+                            <a href="#"><i class="fa fa-list"></i></a>
+                            <a href="#"><i class="fa fa-reorder"></i></a>
+                        </div>
+                    </div> -->
+
+
+                </div>
+            </div>
+
+            {% include "shoptemplate.html" %}
+            
+            
+
+        </div>
+    </section>
+    <!-- Shop Section End -->
+    
+    
+    {% endblock body %}
+</html>

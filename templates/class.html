@@ -1,0 +1,108 @@
+{% extends "main.html" %}
+
+{% block title %}
+Class
+{% endblock title %}
+
+{% block body %}
+    <!-- Breadcrumb Begin -->
+    {% include "breadcrumb.html" %}
+    <!-- Breadcrumb End -->
+
+    <!-- Class Section Begin -->
+    {% if user.is_authenticated %}
+        <div class="course_basket">
+            <a href="/course-basket">
+                <button class="primary-btn">
+                    Course Basket
+                </button>
+            </a>
+
+            <a href="/enrolled-courses">
+                <button class="primary-btn">
+                    Enrolled Courses
+                </button>
+            </a>
+        </div> 
+    {% endif %}
+    <section class="class-page spad">
+        <div class="formcontainer">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="row">
+                        
+                        {% for lesson in lessons  %}
+                          
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="class__item">
+                                <div class="class__item__pic set-bg" data-setbg={{lesson.thumbnail.url}}>
+                                    <div class="label">Shs. {{lesson.price}}</div>
+                                    
+                                    
+                                    {% if lesson in lessons_selected  %}
+                                        <a href='/course-basket' type="submit" class='site-btn enroll'>Selected</a>
+                                    {% elif lesson in lessons_enrolled %}
+                                        <button class='site-btn enroll'>Enrolled</button>
+                                    {% else %}
+                                        <form action='/takecourse/{{lesson.id}}' method="post">
+                                            {% csrf_token %}
+                                            <button type="submit" class='site-btn enroll'>Select</button>
+                                        </form>
+                                    {% endif %}
+                                        
+                                        
+                                </div>
+                                <div class="class__item__text">
+                                    <h5><a href="#">{{lesson.title}}</a></h5>
+                                    <span>{{lesson.timedescription}}</span>
+                                    <p>{{lesson.description}}</p>
+                               
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {% endfor %}
+                    </div>
+                    
+                </div>
+                
+                {% if user.is_authenticated %}
+                    <div class="col-lg-4">
+                        <div class="class__sidebar">
+                            <h5>Made from your own hands</h5>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="col-lg-4">
+                        <div class="class__sidebar">
+                            <h5>Made from your own hands</h5>
+
+                            <form action="/register_for_class/" method="POST">
+                                {% csrf_token %}
+                                <label for="studentname">Name</label>
+                                <input type="text" value="{{profile.user.username}}" name="studentname" required>
+                                <label for="phone_number">Phone Number</label>
+                                <input type="text" name="phone_number" value="{{profile.phone_number}}" required>
+                                <label for="emailInput" >Your working email</label>
+                                <input type="email" name="email" id="emailInput" value="{{profile.user.email}}" required>
+
+                                <label for="study_mode">Preferred Method Of Learning</label>
+                                <select name="mode_of_study" class="list" id="study_mode" required>
+                                    <option value="select" class="option">Click to select</option>
+                                    <option value="online_class" class="option">Online Class</option>
+                                    <option value="physical_class" class="option">Physical Class</option>
+                                </select>
+                                <button type="submit" class="site-btn">register</button>
+                            </form>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+    <!-- Class Section End -->
+
+
+
+
+{% endblock body %}

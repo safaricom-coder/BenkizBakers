@@ -1,0 +1,23 @@
+{% if user.is_authenticated %}
+  
+<h3 class="no-content-textbox">
+    Content May Not Be Available ! <br>
+</h3>
+{% else %}
+
+<div class="form-container">
+    <h3 >
+    Content May Not Be Available ! <br>
+    Please Refresh or <a class="loginlink inpagelinks" href="/login/"><button class="site-btn">Login</button></a> to alter this.
+    <br>
+    <br>
+    <br>
+    <hr>
+    Or call support <button class="primary-btn"><a class="text-white" href="tel:+254795404843">0795404843</a></button>
+    </h3>
+</div>
+
+
+<br>
+<br>
+{% endif %}

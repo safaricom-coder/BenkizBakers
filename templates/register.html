@@ -1,0 +1,20 @@
+{% extends "main.html" %}
+
+{% block title %}
+  Registration
+{% endblock title %}
+
+{% block body %}
+    <form class="registration" action={% url 'register' %} method="post">
+      {% csrf_token %}
+        <input type="text" class="username" name="username" placeholder="User name">
+        <input type="text" name="lastname" class="lastname" placeholder="Last name">
+        <input type="password" class="passwordfield" name="password1" placeholder="Password">
+        <input type="password" class="passwordfield" name="password2" placeholder="Confirm password">
+        <input type="email" name="email" placeholder="Email">
+        <button type="submit">
+            Register
+        </button>
+    </form>
+ 
+{% endblock body %}

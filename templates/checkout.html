@@ -1,0 +1,65 @@
+{% extends "main.html" %}
+
+{% block title %}
+Checkout
+{% endblock title %}
+
+{% block body %}
+
+    <!-- Breadcrumb Begin -->
+    <div class="breadcrumb-option"></div>
+    <!-- Breadcrumb End -->
+
+    <!-- Checkout Section Begin -->
+    <section class="checkout spad">
+        <div class="container">
+            <div class="checkout__form">
+                <form action={% url 'completepurchase' %} method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        
+                        <div class="col-lg-4 col-md-6">
+                            <div class="checkout__order">
+                                <h6 class="order__title">Your order</h6>
+                                <div class="checkout__order__products">Product <span>Each Costs</span></div>
+                                <ul class="checkout__total__products">
+                                    {% for item in cartitems  %}
+                                    
+                                    <li><samp>{{forloop.counter}}.</samp> {{item.quantity}} x {{ item.item.name }} <span>Shs {{ item.item.price }}</span></li>
+                                       
+                                       
+                                    {% endfor %}
+                                </ul>
+                                <ul class="checkout__total__all">
+                                    {{cart.calcTotal}}
+                                    <li>Subtotal <span>Shs.{{cart.total}} </span></li>
+                                    <li>Shipping <span>Shs. {{cart.deliveryfee}}</span> </li>
+                                    <li>Vat <span>Shs. {{cart.vat}}</span></li>
+                                    <li>Total <span>Shs. {{cart.totalcost}}</span></li>
+                                </ul>
+                                
+                                <p>Benkiz Bakers Family thanks you for your purchase. Welcome once more 😊</p>
+                                
+                                <div class="payment-options">
+                                    <label for="mpesa">
+                                        Mpesa
+                                    </label>
+                                    <input type="radio" name="paymentoption" id="mpesa" value="mpesa">
+                                    <label for="bank">
+                                        Bank
+                                    </label>
+                                    <input type="radio" name="paymentoption" id="bank" value="bank">
+                                    
+                                </div>
+                                <button type="submit" class="site-btn">PLACE ORDER</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    <!-- Checkout Section End -->
+
+
+{% endblock body %}

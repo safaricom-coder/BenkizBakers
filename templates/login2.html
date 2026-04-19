@@ -1,0 +1,78 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login and Registration System</title>
+    <link rel="stylesheet" href={% static "css/loginstyles.css" %}>
+    <link rel="stylesheet" href={% static "css/style.css" %}>
+    <link rel="stylesheet" href={% static "css/font-awesome.min.css" %} type="text/css">
+    <link rel="stylesheet" href={% static "css/elegant-icons.css" %} type="text/css">
+    <link rel="stylesheet" href={% static "css/nice-select.css" %} type="text/css">
+
+</head>
+<body id="documentBody" class="body2 body">
+
+    {% for message in messages  %}
+    <div class="alert-box">
+        <h5>{{message}} ⚠️</h5>
+    </div>
+    {% endfor %}
+
+
+
+    <div class="form-container">
+        <div class="small_border">
+            <i style="font-size:20px;" class="cursor_pointer loginmoon themeButton fa fa-moon-o">Dark</i>
+        </div>
+        
+        <div>
+            <img src="/static/logo_n_branding/logo.webp" style="width: 150px;" alt="Benkiz Bakers"/>
+        </div>
+        <div class="toggle-buttons">
+            <button class="hidden" id="showLogin hidden">Login</button>
+            <button id="showRegister">Register</button>
+        </div>
+        <div id="loginForm" class="form">
+            <h2>Login</h2>
+            <form action={% url 'login' %} method="post">
+                {% csrf_token %}
+                <label for="username"> Username :</label>
+                <input class="custombutton" name="username" type="text">
+                <hr>
+                
+                <label for="password"> Password :</label>
+                <input class="custombutton" type="password" name="password">
+                <hr>
+
+                <button class="submit-passcode" type="submit">
+                    Login
+                </button>
+            </form>
+            <p id="loginMessage"></p>
+        </div>
+        <div id="registerForm" class="form team__btn hidden">
+            <h2>Register</h2>
+            <form class="registration" action={% url 'register' %} method="post">
+                {% csrf_token %}
+                <input  type="text" class="custombutton" name="regusername" placeholder="User name">
+                <hr>
+                <input  type="password" class="custombutton" name="regpassword1" placeholder="Password">
+                <hr>
+                <input  type="password" class="custombutton" name="regpassword2" placeholder="Confirm password">
+                <hr>
+                <input  type="email" name="regemail" class="custombutton" placeholder="Email">
+                <hr>
+                <button type="submit">
+                    Register
+                </button>
+            </form>
+            <p id="registerMessage"></p>
+        </div>
+    </div>
+
+    <script  src={% static "js/loginscript.js" %}></script>
+    <script src={% static "js/benkizmain.js" %}></script>
+</body>
+</html>

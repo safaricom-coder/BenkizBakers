@@ -1,0 +1,129 @@
+{% extends "main.html" %}
+{% load static %}
+
+{% block body %}
+
+<section class="shop spad">
+    <div class="container">
+        <div class="row shop-row justify-content-center">
+            <div class="col-lg-6 col-md-8 col-sm-12">
+                <div class="product__item text-center" style="padding:40px;">
+
+                    <div class="product__label">
+                        <span>Payment Processing</span>
+                    </div>
+
+                    <div style="margin-top:30px;">
+                        <i class="fa fa-mobile fa-3x" style="margin-bottom:20px;"></i>
+                        <h4 style="margin-bottom:15px;">Waiting for M-Pesa Confirmation</h4>
+
+                        <p><strong>Reference:</strong> {{ reference }}</p>
+                        <p><strong>Amount:</strong> KES {{ transaction.amount }}</p>
+
+                        <p id="payment-message">
+                            Please complete the payment on your phone.
+                        </p>
+                    </div>
+
+                    <div style="margin-top:30px;">
+                        <div class="spinner-border" role="status" id="spinner">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+const reference = "{{ reference }}"; // Transaction reference from Django
+
+const apiKey = "{{ LIPIA_API_KEY }}"; // You can pass from Django or use environment variable
+const baseUrl = "https://lipia-api.kreativelabske.com/api/v2/payments/status";
+
+const spinner = document.getElementById("spinner");
+const messageEl = document.getElementById("payment-message");
+
+async function checkStatus() {
+    try {
+        const response = await fetch(`${baseUrl}?reference=${reference}`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${apiKey}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        const result = await response.json();
+
+        if (!result.success || result.status === "error") {
+            // Invalid reference or transaction not found
+            messageEl.innerHTML = "<strong style='color:red;'>Transaction not found or invalid reference ❌</strong>";
+            spinner.style.display = "none";
+            setTimeout(() => {
+                window.location.href = "/checkout/";
+            }, 3000);
+            return;
+        }
+
+        const payment = result.data.response;
+
+        switch (payment.Status) {
+            case "PENDING":
+                // Still processing
+                messageEl.innerHTML = result.customerMessage || "Payment is still being processed ⏳";
+                spinner.style.display = "block";
+                break;
+
+            case "SUCCESS":
+                // Payment successful
+                messageEl.innerHTML = "<strong style='color:green;'>Payment Successful 🎉</strong><br>Redirecting...";
+                spinner.style.display = "none";
+                setTimeout(() => {
+                    window.location.href = "/thanks/";
+                }, 3000);
+                break;
+
+            case "FAILED":
+                // Check if cancelled by user
+                if (payment.ResultDesc && payment.ResultDesc.toLowerCase().includes("cancelled by user")) {
+                    messageEl.innerHTML = "<strong style='color:red;'>Operation Cancelled by the user ❌</strong>";
+                    spinner.style.display = "none";
+                    setTimeout(() => {
+                        window.location.href = "/checkout/";
+                    }, 3000);
+                } else {
+                    // Other failure
+                    messageEl.innerHTML = `<strong style='color:red;'>Payment Failed ❌</strong><br>${payment.ResultDesc || ""}`;
+                    spinner.style.display = "none";
+                    setTimeout(() => {
+                        window.location.href = "/checkout/";
+                    }, 3000);
+                }
+                break;
+
+            default:
+                messageEl.innerHTML = "<strong style='color:red;'>Unknown payment status</strong>";
+                spinner.style.display = "none";
+                setTimeout(() => {
+                    window.location.href = "/checkout/";
+                }, 3000);
+        }
+
+    } catch (error) {
+        console.error("Error polling payment status:", error);
+        messageEl.innerHTML = "<strong style='color:red;'>Error checking payment status</strong>";
+        spinner.style.display = "none";
+        setTimeout(() => {
+            window.location.href = "/checkout/";
+        }, 3000);
+    }
+}
+
+// Poll every 3 seconds
+setInterval(checkStatus, 3000);
+</script>
+
+{% endblock body %}

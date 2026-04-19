@@ -1,0 +1,48 @@
+{% extends "main.html" %}
+
+{% block title %}
+  Profile
+{% endblock title %}
+
+{% block body %}
+<div class="body2">
+    <div class="form-container">
+    
+        <div class="form">
+            <div class="username">
+                user name : <h4>{{user.username}}</h4>
+            </div>
+            <div class="lastname">
+                Lastname : {{profile.lastname.capitalize}}
+            </div> 
+            <div class="user_phone">
+                Phone Number : {{profile.phone_number}}
+            </div>
+            <div class="county">
+                County : {{profile.county}}
+            </div>
+            <div class="country">Country : {{profile.country}}</div>
+            <div class="address_or_street">
+                adress: {{profile.address_or_street}}
+                
+            </div>
+            <div class="apartment_or_house_name_or_number"> Apartment : {{profile.apartment_or_house_name_or_number}}</div>
+        </div>
+        <div  class="profile_pic_area_mobile set-bg" data-setbg={{profile.profilepic.url}} style="background-image: url({{profile.profilepic.url}});">
+            
+        </div>
+    
+        <div class="billing_registration">
+            <form action={% url 'updateprofile' %} method="get">
+                <button type="submit">
+                    Complete Profile or <br><hr>
+                    Add Billing Details
+                </button>
+            </form>
+        </div>
+    
+    </div>
+</div>
+
+
+{% endblock body %}

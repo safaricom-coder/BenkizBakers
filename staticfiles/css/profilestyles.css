@@ -1,0 +1,65 @@
+.body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: rgba(203, 205, 206, 0.699);
+}
+
+
+.form-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-container div {
+    margin-bottom: 15px;
+}
+
+.form-container label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-container input,
+.form-container select {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    background-color: aliceblue;
+    border-radius: 5px;
+    border-width: 1px;
+}
+
+
+.form-container button {
+    width: 100%;
+    padding: 10px;
+    background-color:  #ee9522;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 2px;
+}
+
+.form-container button:hover {
+    background-color: #0056b3;
+    color: aliceblue;
+}
+
+.hidden {
+    display: none;
+}
+
+#loginMessage,
+#registerMessage {
+    color: red;
+    text-align: center;
+    margin-top: 10px;
+}
+.profile-pic {
+    border-radius: 50%;
+}

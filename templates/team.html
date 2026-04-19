@@ -1,0 +1,64 @@
+<section class="team spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-7 col-md-7 col-sm-7">
+                <div class="section-title">
+                    <span>Our team</span>
+                    <h2>Benkiz Bakers </h2>
+                </div>
+            </div>
+            <div class="col-lg-5 col-md-5 col-sm-5 one-liner-container" >
+                <div class="team__btn">
+
+                    <a href="https://wa.me/254707091550" class="primary-btn">Join Benkiz Team</a> <br> <br>
+                    <a href="https://wa.me/254707091550" style='font-size:20px;' class="primary-btn fa fa-whatsapp"> Whatsapp</a> <br><br>
+                    <a class="primary-btn" href="tel:+254707091550">Call</a>
+                </div>
+          
+            </div>
+        </div>
+        <div class="row shop-row">
+
+
+            {%for member in team %}
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="team__item set-bg memberpic" >
+                        <img  src={{ member.profilepic.url }} alt="member pic">
+                        <div class="team__item__text">
+                            <h6>{{ member.user.username}}</h6>
+                            <span>{{member.job}}</span>
+                            <div class="team__item__social">
+
+                                {% for social in socials %}
+                        
+                                    {% if member.user == social.user  %}
+                                  
+                                        {% if social.facebook is not None %}
+                                        <a href={{social.facebook}}><i class="fa fa-facebook"></i></a>
+                                        {% endif %}
+                                        {% if social.twitter is not None%}
+                                        
+                                        <a href={{social.twitter}}><i class="fa fa-twitter"></i></a>
+                                        {% endif %}
+                                        {% if social.instagram is not None %}
+                                        
+                                        <a href={{social.instagram}}><i class="fa fa-instagram"></i></a>
+                                        {% endif %}
+                                        {% if social.youtube is not None %}
+                                        
+                                        <a href={{social.youtube}}><i class="fa fa-youtube-play"></i></a>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                                
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor%}
+
+
+        </div>
+    </div>
+</section>

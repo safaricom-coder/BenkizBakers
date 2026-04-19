@@ -1,0 +1,36 @@
+{% extends "main.html" %}
+
+{% block title %}
+  Cake Gallery
+{% endblock title %}
+
+{% block body %}
+<!-- mycode -->
+<br>
+<div class="row shop-row">
+
+    {% for item in items  %}
+        {% if forloop.counter < 65 %}
+        <div class="col-lg-3 col-md-6 col-sm-6 productdiv">
+            <div class="product__item">
+                <a href={% url "productdetails" item.id %}>
+                    <div class="product__item__pic set-bg set-bg-row" data-setbg={{item.thumbnail.url}} style="background-image: url(&quot;{{item.thumbnail.url}}&quot;);">
+                    
+                    </div>
+                </a>
+                <div class="product__item__text">
+                    <h6><a href="#">{{item.name}}</a></h6>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+    {% endfor %}
+
+    
+
+</div>
+
+ <!-- end of my code  -->
+</section>
+{% endblock body %}

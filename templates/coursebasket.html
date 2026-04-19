@@ -1,0 +1,72 @@
+{% extends "main.html" %}
+
+{% block title %}
+Course Basket
+{% endblock title %}
+
+{% block body %}
+
+    <!-- Breadcrumb Begin -->
+    {% include "breadcrumb.html" %}
+    <!-- Breadcrumb End -->
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>Course</th>
+                <th>Subscription Status</th>
+                <th>Quick Action</th>
+            </tr>
+        </thead>
+        <tbody class='table-body'>
+            {% for course in selectedCourses %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{course.title}}</td>
+                    {% comment %} {% if course.subscription_status %}
+                        <td>Payed</td>
+                    {% else %}
+                        <td>Unsubscribed</td>
+                    {% endif %} {% endcomment %}
+                                            <td>Unsubscribed</td>
+
+
+                    {% if course.subscription_status %}
+                        <td class="twocolcell">
+                            <a href="/unsubscribecourse/{{course.id}}">
+                                <button class="primary-btn">
+                                    Unsubscribe
+                                </button>
+                            </a>
+                            <a href="/deletecourse/{{course.id}}" method="post">
+                                <button type="submit" class="site-btn">
+                                    Delete
+                                </button>
+                            </a>
+                        </td>
+                    {% else %}
+                        <td class='twocolcell'>
+                            <form action="/subscribecourse/{{course.id}}" method='post'>
+                                {% csrf_token %}
+                                <button type='submit' class="primary-btn">
+                                    Subscribe
+                                </button>
+                            </form>
+                            <form class="site-btn" action="/deletecourse/{{course.id}}" method='post'>
+                                {% csrf_token %}
+                                <button class="site-btn">
+                                    Delete
+                                </button>
+                            </form>
+                        </td>
+                    {% endif %}
+
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+
+{% endblock body %}

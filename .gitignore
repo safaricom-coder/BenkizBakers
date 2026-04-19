@@ -1,0 +1,17 @@
+my_wsgifile.txt
+
+model_content_for_benkiz_bakers.txt
+Docker
+
+media/
+.venv
+
+main/__pycache__/
+benkizapi/__pycache__
+main/migrations
+benkizapi/migrations
+*.pyc
+db.sqlite3
+benkizvenv/
+Source/
+*.env

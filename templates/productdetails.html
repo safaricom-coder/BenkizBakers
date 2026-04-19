@@ -1,0 +1,142 @@
+{% extends "main.html" %}
+{% block title %}
+  Product Details
+{% endblock title %}
+{% block body %}
+      <!-- Shop Details Section Begin -->
+    <section class="product-details spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="product__details__img">
+                        <div class="product__details__big__img">
+                            <img class="big_img image_box" src={{item.thumbnail.url}} alt={{item.name}}>
+                        </div>
+                        <div class="product__details__thumb" style="overflow: hidden; outline: none; cursor: grab; touch-action: manipulation;">
+                            <div class="pt__item active">
+                                <img class="image_box" data-imgbigurl={{item.thumbnail.url}} src={{item.thumbnail.url}} alt="">
+                            </div>
+
+                            <div class="related-box">
+
+                                {% for item in relateditems %}
+                                    {% if forloop.counter < 5 %}
+                                        <div class="pt__item">
+                                            <img class="image_box" data-imgbigurl={{item.thumbnail.url}} src={{item.thumbnail.url}} alt={{item.name}}>
+                                        </div>
+                                    {% endif%}
+                                {% endfor %}
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="product__details__text">
+                        <div class="product__label">
+                            <span>{{item.category}}</span>
+                        </div>
+                        <h4>{{item.name}}</h4>
+                        <h5>Shs. {{item.price}}</h5>
+                        <p>{{item.description}}</p>
+
+                    </div>
+                </div>
+            </div>
+            <div class="product__details__tab">
+                <div class="col-lg-12">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab">Description</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab">Additional information</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tabs-3" role="tab">Previews({{item.numberofviews}})</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tabs-1" role="tabpanel">
+                            <div class="row d-flex justify-content-center">
+                                <div class="col-lg-8">
+                                    <p>{{item.description}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tabs-2" role="tabpanel">
+                            <div class="row d-flex justify-content-center">
+                                <div class="col-lg-8">
+                                    <p>{{item.additionalinfo}}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tabs-3" role="tabpanel">
+                            <div class="row d-flex justify-content-center">
+                                <div class="col-lg-8">
+                                    <p>This item caught {{item.numberofviews}} people's attention.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Shop Details Section End -->
+
+    <!-- Related Products Section Begin -->
+    <section class="related-products spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <div class="section-title">
+                        <h2>Related Products</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="related__products__slider owl-carousel owl-loaded owl-drag">
+                    
+                    
+                <div class="owl-stage-outer">
+                    <div class="owl-stage" style="transform: translate3d(-1680px, 0px, 0px); transition: 1.2s; width: 3360px;">
+
+                        {% for item in relateditems  %}
+                            {% if forloop.counter < 15 %}
+                                <div class="owl-item" style="width: 240px;">
+                                    <div class="col-lg-3">
+                                        <div class="product__item">
+                                            <div class="product__item__pic set-bg" data-setbg={{item.thumbnail.url}} style="background-image: url(&quot;{{item.thumbnail.url}}&quot;);">
+                                                <div class="product__label">
+                                                    <span>{{item.category}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="product__item__text">
+                                                <h6>{{item.description}}</h6>
+                                                <!-- <h6><a href="#">Gluten Free Mini Dozen</a></h6> -->
+                                                <div class="product__item__price">Shs. {{item.price}}</div>
+                                                <div class="cart_add">
+                                                    <a href="/buyItem/{{item.id}}">Add to cart</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+
+
+                    </div>
+                </div>
+
+                <div class="owl-dots disabled">
+
+                </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock body %}

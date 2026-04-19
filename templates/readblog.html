@@ -1,0 +1,23 @@
+{% extends "main.html" %}
+
+{% block body %}
+<div class="blog__item__pic set-bg" data-setbg={{post.coverimage.url}} style="background-image: url(&quot;/media/blog_pics/20241231_095928.jpg&quot;);">
+    <div class="blog__pic__inner">
+        <div class="label">{{post.title}}</div>
+        <ul>
+            <li>By <span>{{post.user.username}}</span></li>
+            <li>{{post.timecreated}}</li>
+            <li><h6>{{views}} Views</h6></li>
+        </ul>
+    </div>
+</div>
+
+<div class="content">
+    <pre>
+        <h3>{{post.title}}</h3>
+    </pre>
+    <div class="contentbody">{{post.content|linebreaks}}</div>
+</div>
+
+{% endblock body %}
+

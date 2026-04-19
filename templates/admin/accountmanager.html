@@ -1,0 +1,142 @@
+{% extends "../main.html" %}
+{% load static %}
+{% block title %}
+  Account Manager
+{% endblock title %}
+
+{% block breadcrumb %}
+  Account Manager
+{% endblock breadcrumb %}
+
+{% block body %}
+<br>
+<br>
+
+<div id="grid-container">
+    <div class="lid profile-editor form-container hidden">
+        <form action="" class="form">
+            <label for="username">Username</label>
+            <input  name="username" id="username" >
+            <label for="job">Job</label>
+            <input  name="job" id="job">
+            <label for="phone_number">Phone Number</label>
+            <input type="text" name="phone_number" id="phone_number">
+
+            <button type="submit" class="custombutton">Update Info</button>
+            <button type="reset" class="custombutton">Reset</button>
+        </form>
+    </div>
+
+    <div class="table-container">
+        <table class="table" >
+            <thead>
+                <th>No.</th>
+                <th>Name</th>
+                <th>Number</th>
+                <th>Last Name</th>
+                <th>Is Admin</th>
+                <th>Is Team</th>
+                <th>Job</th>
+                <th>Country</th>
+                <th>County</th>
+                <th>Address</th>
+                <th>Apartment</th>
+                <th>OPTIONS</th>
+                
+            </thead>
+            <tbody>
+                {% for account in profiles  %}
+            
+                {% if account == profile %}
+                
+                <tr>
+                    <td class="tablecell">{{forloop.counter}}</td>
+                    <td class="tablecell" >
+                        {{account.user.username}}
+                        <img src={{account.profilepic.url}} alt="{{user.username}}">
+                    </td>
+                    <td class="tablecell" >{{account.phone_number}}</td>
+                    <td class="tablecell" >{{account.user.lastname}}</td>
+                    <td class="tablecell" >{{account.is_normal_admin}}</td>
+                    <td class="tablecell" >{{account.is_team}}</td>
+                    <td class="tablecell" >{{account.job}}</td>
+                    <td class="tablecell" >{{account.country}}</td>
+                    <td class="tablecell" >{{account.county}}</td>
+                    <td class="tablecell" >{{account.address_or_street}}</td>
+                    <td class="tablecell" >{{account.apartment_or_house_name_or_number}}</td>
+                    <td class="tablecell" >
+                        <button class="custombutton">You cannot modify yourself !</button>
+                        
+                    </td>
+            
+                </tr>
+                {% else %}
+                <tr>
+                    <td class="tablecell">{{forloop.counter}}</td>
+                    <td class="tablecell" >
+                        {{account.user.username}}
+                        <img src={{account.profilepic.url}} alt="{{user.username}}">
+                    </td>
+                    <td class="tablecell" >{{account.phone_number}}</td>
+                    <td class="tablecell" >{{account.user.lastname}}</td>
+                    <td class="tablecell" >{{account.is_normal_admin}}</td>
+                    <td class="tablecell" >{{account.is_team}}</td>
+                    <td class="tablecell" >{{account.job}}</td>
+                    <td class="tablecell" >{{account.country}}</td>
+                    <td class="tablecell" >{{account.county}}</td>
+                    <td class="tablecell" >{{account.address_or_street}}</td>
+                    <td class="tablecell" >{{account.apartment_or_house_name_or_number}}</td>
+                    <td class="tablecell" >
+                        <button class="custombutton modifyAccountButton">Modify</button>
+                        <form method="post">
+                            {% csrf_token %}
+                            <button id="{{account.user.id}}" type="submit" class="site-btn removeuser" >Remove</button>
+                        </form>
+                    </td>
+            
+                </tr>
+                {% endif %}
+
+                {% endfor %}
+                
+            </tbody>
+        </table>
+        <br>
+        <br>
+    </div>
+</div>
+<br>
+<br>
+
+<script type="module">
+    document.addEventListener('DOMContentLoaded',()=>{
+        setInterval(()=>{
+            let profilesToRemove = document.querySelectorAll('.removeuser')
+            profilesToRemove.forEach(
+                (profileToRemove)=>{
+                    profileToRemove.addEventListener('click',()=>{
+
+                        let mycsrftoken = '{{ csrf_token }}' 
+                        
+                        $.ajax({
+                            type:'DELETE',
+                            url:`/api/deleteuser/${profileToRemove.id}`,
+                            headers:{'X-CSRFToken':mycsrftoken},
+                            success:(response)=>{
+                                console.log(response)
+                            },
+                            error:(response)=>{
+                                alert(`An error occured   ${(response)}`)
+                            }
+                        });
+                
+                    })
+                }
+            )
+        },1000)
+
+
+    })
+</script>
+<script type="module" src={% static "js/accountmanager.js" %} ></script>
+{% endblock body %}
