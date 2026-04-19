@@ -328,6 +328,19 @@ def updatecart(request):
 def productdetails(request,itemid):
 
     item = Item.objects.get(id=itemid)
+
+    print(
+        f'''
+        
+
+
+
+        {item.thumbnail.url}
+        
+        '''
+    )
+
+
     if request.user.is_authenticated:
         cart = Cart.objects.get(user = request.user)
         cartitems = CartItem.objects.filter(cart = cart)

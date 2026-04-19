@@ -12,13 +12,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv(BASE_DIR / ".env")
 
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.environ.get('CLOUD_NAME_CLOUDINARY', ''),
-    'API_KEY': os.environ.get('API_KEY_CLOUDINARY', ''),
-    'API_SECRET': os.environ.get('API_SECRET_CLOUDINARY', ''),
-}
-if not all(CLOUDINARY_STORAGE.values()):
-    print("⚠️ Cloudinary not fully configured")
+import cloudinary
+
+cloudinary.config(
+    cloud_name=os.environ.get('CLOUD_NAME_CLOUDINARY'),
+    api_key=os.environ.get('API_KEY_CLOUDINARY'),
+    api_secret=os.environ.get('API_SECRET_CLOUDINARY'),
+    secure=True
+)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -72,7 +73,10 @@ INSTALLED_APPS = [
 ]
 # <<<<<<< HEAD
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+CLOUDINARY_ENABLED = bool(os.environ.get('CLOUD_NAME_CLOUDINARY'))
+
+if CLOUDINARY_ENABLED:
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
