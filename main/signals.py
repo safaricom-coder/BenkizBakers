@@ -27,5 +27,5 @@ def create_default_categories(sender, **kwargs):
     if not CakeCategory._meta.db_table:
         return
 
-    for category in CATEGORIES:
-        CakeCategory.objects.get_or_create(name=category)
+    for c in CATEGORIES:
+        CakeCategory.objects.get_or_create(name=c)
