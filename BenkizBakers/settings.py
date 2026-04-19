@@ -15,6 +15,8 @@ CLOUDINARY_STORAGE = {
     'API_KEY': os.getenv('API_KEY_CLOUDINARY'),
     'API_SECRET': os.getenv('API_SECRET_CLOUDINARY'),
 }
+if not all(CLOUDINARY_STORAGE.values()):
+    print("⚠️ Cloudinary not fully configured")
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
