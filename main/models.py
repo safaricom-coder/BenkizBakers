@@ -7,10 +7,7 @@ from cloudinary.models import CloudinaryField
 # Create your models here.
 
 # Consolas,Lucida Console,Lucida,Lucida Sans Typewriter,Cascadia Code
-class CakeCategory(models.Model):
-    name = models.CharField(max_length=50)
-    def __str__(self):
-        return self.name
+
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     total = 0
