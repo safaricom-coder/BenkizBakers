@@ -5,8 +5,16 @@ Django settings for BenkizBakers project.
 from pathlib import Path
 import os
 
+
+
 from dotenv import load_dotenv
 load_dotenv()
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.getenv('CLOUD_NAME_CLOUDINARY'),
+    'API_KEY': os.getenv('API_KEY_CLOUDINARY'),
+    'API_SECRET': os.getenv('API_SECRET_CLOUDINARY'),
+}
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -54,8 +62,13 @@ INSTALLED_APPS = [
     'benkizapi',
     'corsheaders',
     'rest_framework',
+
+    'cloudinary',
+    'cloudinary_storage',
 ]
-<<<<<<< HEAD
+# <<<<<<< HEAD
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
@@ -74,7 +87,9 @@ SESSION_COOKIE_SECURE = False
 CSRF_COOKIE_SAMESITE = 'Lax'
 CSRF_COOKIE_SECURE = False
 CSRF_COOKIE_HTTPONLY = False
-=======
+
+
+# =======
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
@@ -86,7 +101,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://benkizbakers.onrender.com",
     "http://127.0.0.1:8000",
 ]
->>>>>>> d8d569f (Update project settings for Replit compatibility and security)
+# >>>>>>> d8d569f (Update project settings for Replit compatibility and security)
 
 SESSION_COOKIE_SAMESITE = 'Lax'
 SESSION_COOKIE_SECURE = False

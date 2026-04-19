@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 import datetime
 
+from cloudinary.models import CloudinaryField
+
 # Create your models here.
 
 # Consolas,Lucida Console,Lucida,Lucida Sans Typewriter,Cascadia Code
@@ -43,12 +45,20 @@ cakecategories = (
     ('birthdaycake','birthdaycake')
 )
 
+
+class CakeCategory(models.Model):
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name
+
 class Item(models.Model):
     name = models.CharField(max_length=50)
-    thumbnail = models.ImageField(
-        upload_to='item_pics/',
-        default='item_pics/default.jpg',
-        blank=True
+    thumbnail = CloudinaryField(
+        'image',
+        blank=True,
+        null=True,
+        default='item_pics/default.jpg'
     )
     description = models.CharField(max_length=1000,blank=True)
     additionalinfo = models.TextField(max_length=1000,blank=True)
@@ -56,8 +66,9 @@ class Item(models.Model):
     numberofviews = models.PositiveIntegerField(default=1)
     numberOfItems = models.PositiveIntegerField(default=0)
     soldUnits = models.PositiveIntegerField(default=0)
-    category = models.CharField(max_length=50, choices=cakecategories,blank=True,null=True)
+    category = models.ManyToManyField('main.CakeCategory')
     is_wished = models.BooleanField(default=False)
+
     def __str__(self):
         return self.name
 
@@ -87,8 +98,10 @@ class UserProfile(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE,related_name='userprofile')
     is_normal_admin = models.BooleanField(default=False)
     phone_number = models.CharField(max_length=20,blank=True,null=True)
-    profilepic =  models.ImageField(
-        upload_to='profile_pics/',
+    profilepic = CloudinaryField(
+        'image',
+        blank=True,
+        null=True,
         default='profile_pics/default.png'
     )
     choices = [
@@ -166,12 +179,14 @@ class Message(models.Model):
 
     def __str__(self):
         return self.body[0:10] + '...'
+
 blogpostcategories = (
     ('Recipe','Recipe'),
     ('Guide','Guide'),
     ('News','News'),
     ('Video','Video')
 )
+
 class BlogPost(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
     title = models.CharField(max_length=50)
@@ -180,10 +195,11 @@ class BlogPost(models.Model):
     numberofviews = models.PositiveIntegerField(default=0)
     category = models.CharField(max_length=50, choices=blogpostcategories,blank=True,null=True)
 
-    coverimage = models.ImageField(
-        upload_to='blog_pics/',
-        default='blog_pics/default.jpg',
-        blank=True
+    coverimage = CloudinaryField(
+        'image',
+        blank=True,
+        null=True,
+        default='blog_pics/default.jpg'
     )
 
     @property
@@ -191,7 +207,6 @@ class BlogPost(models.Model):
         return self.content[0:250]
     def __str__(self):
         return self.title
-
 
 
 class View(models.Model):
@@ -202,22 +217,22 @@ class View(models.Model):
         return self.user.username + 'view'
     
     
- 
-    
 class Lesson(models.Model):
     title = models.CharField(max_length=200,default='Benkiz Class')
     availability = models.BooleanField(default=True)
     description = models.CharField(max_length=100,default='',blank=True)
     price = models.PositiveIntegerField(default=10500)
-    thumbnail = models.ImageField(
-        upload_to='img/class/',
-        default='class-1.jpg',
-        blank=True
+    thumbnail = CloudinaryField(
+        'image',
+        blank=True,
+        null=True,
+        default='class-1.jpg'
     )
     thumbnailname=models.CharField(max_length=50,blank=True)
     fineprint = models.TextField(max_length=2000)
     time=models.DateTimeField(auto_now=True)
     timedescription = models.CharField(max_length=200,default='')
+
     def __str__(self):
         return self.title + ' class'
 
@@ -243,7 +258,11 @@ class LearnerProfile(models.Model):
 class HeroBanner(models.Model):
     text = models.CharField(max_length=500)
     font_size = models.PositiveIntegerField(default=14)
-    picture = models.ImageField(upload_to='hero/',blank=True,null=True)
+    picture = CloudinaryField(
+        'image',
+        blank=True,
+        null=True
+    )
     picture_present = models.BooleanField(default=False)
    
     def __str__(self):
