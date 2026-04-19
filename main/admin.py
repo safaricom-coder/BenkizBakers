@@ -21,3 +21,4 @@ admin.site.register(CourseBasket)
 admin.site.register(Transaction)
 admin.site.register(HeroBanner)
 
+admin.site.register(CakeCategory)
