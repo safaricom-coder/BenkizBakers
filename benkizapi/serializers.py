@@ -29,7 +29,8 @@ class ItemSerializer(serializers.ModelSerializer):
             return url
 
         if request:
-            return request.build_absolute_uri(url)
+            # return request.build_absolute_uri(url)
+            return "https://benkizbakers.pythonanywhere.com/"+url
 
         return url
 

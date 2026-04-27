@@ -14,11 +14,13 @@ load_dotenv(BASE_DIR / ".env")
 
 import cloudinary
 
+
 cloudinary.config(
-    cloud_name=os.environ.get('CLOUD_NAME_CLOUDINARY'),
-    api_key=os.environ.get('API_KEY_CLOUDINARY'),
-    api_secret=os.environ.get('API_SECRET_CLOUDINARY'),
-    secure=True
+    cloud_name=os.environ.get("CLOUD_NAME_CLOUDINARY"),
+    api_key=os.environ.get("API_KEY_CLOUDINARY"),
+    api_secret=os.environ.get("API_SECRET_CLOUDINARY"),
+    secure=True,
+    api_proxy="http://proxy.server:3128"
 )
 
 BASE_DIR = Path(__file__).resolve().parent.parent
