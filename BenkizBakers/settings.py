@@ -31,31 +31,15 @@ DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = [
     "127.0.0.1",
-    "localhost",
-    ".replit.dev",
-    ".repl.co",
-    ".replit.app",
-    "safariocom.pythonanywhere.com",
+    "benkizbakers.pythonanywhere.com",
     ".vercel.app",
-    "benkizbakers.onrender.com",
-    "*",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://safariocom.pythonanywhere.com",
-    "https://benkizbakers.onrender.com",
+    "https://benkizbakers.pythonanywhere.com",
+    "https://benkiz.vercel.app",
 ]
 
-REPLIT_DOMAINS = os.environ.get('REPLIT_DOMAINS', '')
-if REPLIT_DOMAINS:
-    for domain in REPLIT_DOMAINS.split(','):
-        domain = domain.strip()
-        if domain:
-            CSRF_TRUSTED_ORIGINS.append(f"https://{domain}")
-
-REPLIT_DEV_DOMAIN = os.environ.get('REPLIT_DEV_DOMAIN', '')
-if REPLIT_DEV_DOMAIN:
-    CSRF_TRUSTED_ORIGINS.append(f"https://{REPLIT_DEV_DOMAIN}")
 
 INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
@@ -80,29 +64,11 @@ CLOUDINARY_ENABLED = bool(os.environ.get('CLOUD_NAME_CLOUDINARY'))
 if CLOUDINARY_ENABLED:
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = True
+LOCAL_DEFAULT_IMAGE = '/media/item_pics/default.jpg'
+DEFAULT_FOLDER = '/item_pics'
+DEFAULT_PUBLIC_ID = 'default'
+DEFAULT_IMAGE_URL = None
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "https://safariocom.pythonanywhere.com",
-    "https://benkizbakers.onrender.com",
-    "https://benkiz.vercel.app",
-    "http://127.0.0.1:8000",
-]
-
-SESSION_COOKIE_SAMESITE = 'Lax'
-SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_SAMESITE = 'Lax'
-CSRF_COOKIE_SECURE = False
-CSRF_COOKIE_HTTPONLY = False
-
-
-# =======
-
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
@@ -111,7 +77,6 @@ CORS_ALLOWED_ORIGINS = [
     "https://benkizbakers.onrender.com",
     "http://127.0.0.1:8000",
 ]
-# >>>>>>> d8d569f (Update project settings for Replit compatibility and security)
 
 SESSION_COOKIE_SAMESITE = 'Lax'
 SESSION_COOKIE_SECURE = False
@@ -128,9 +93,9 @@ REST_FRAMEWORK = {
 }
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',

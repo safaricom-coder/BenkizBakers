@@ -1,8 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 import datetime
-
+from django.conf import settings
 from cloudinary.models import CloudinaryField
+import cloudinary.uploader
 
 # Create your models here.
 
@@ -57,9 +58,11 @@ class Item(models.Model):
     thumbnail = CloudinaryField(
         'image',
         blank=True,
-        null=True,
-        default='item_pics/default.jpg'
-    )
+        folder = settings.DEFAULT_FOLDER,
+        public_id =None,
+        null=True
+            )
+
     description = models.CharField(max_length=1000,blank=True)
     additionalinfo = models.TextField(max_length=1000,blank=True)
     price = models.DecimalField(decimal_places=2,max_digits=20)
@@ -68,6 +71,12 @@ class Item(models.Model):
     soldUnits = models.PositiveIntegerField(default=0)
     category = models.ManyToManyField('main.CakeCategory')
     is_wished = models.BooleanField(default=False)
+
+    def save(self,*args,**kwargs):
+        # if no image is uploaded
+        if not self.thubnail:
+            self.thubnail = settings.DEFAULT_IMAGE_URL
+        super().save(*args,**kwargs)
 
     def __str__(self):
         return self.name
