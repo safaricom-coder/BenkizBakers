@@ -4,29 +4,18 @@ Django settings for BenkizBakers project.
 
 from pathlib import Path
 import os
-
-
-
+import sys
 from dotenv import load_dotenv
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load .env
 load_dotenv(BASE_DIR / ".env")
 
-import cloudinary
-
-
-cloudinary.config(
-    cloud_name=os.environ.get("CLOUD_NAME_CLOUDINARY"),
-    api_key=os.environ.get("API_KEY_CLOUDINARY"),
-    api_secret=os.environ.get("API_SECRET_CLOUDINARY"),
-    secure=True,
-    api_proxy="http://proxy.server:3128"
-)
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-
+# =========================
+# BASIC SETTINGS
+# =========================
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-fallback-change-in-production')
-
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = [
@@ -40,7 +29,9 @@ CSRF_TRUSTED_ORIGINS = [
     "https://benkiz.vercel.app",
 ]
 
-
+# =========================
+# APPS
+# =========================
 INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
     'django.contrib.admin',
@@ -49,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'main.apps.MainConfig',
     'benkizapi',
     'corsheaders',
@@ -57,19 +49,42 @@ INSTALLED_APPS = [
     'cloudinary',
     'cloudinary_storage',
 ]
-# <<<<<<< HEAD
 
-CLOUDINARY_ENABLED = bool(os.environ.get('CLOUD_NAME_CLOUDINARY'))
+# =========================
+# CLOUDINARY CONFIG
+# =========================
+import cloudinary
+
+cloudinary.config(
+    cloud_name=os.environ.get("CLOUD_NAME_CLOUDINARY"),
+    api_key=os.environ.get("API_KEY_CLOUDINARY"),
+    api_secret=os.environ.get("API_SECRET_CLOUDINARY"),
+    secure=True
+)
+
+# Detect PythonAnywhere
+ON_PYTHONANYWHERE = "pythonanywhere" in sys.platform
+
+CLOUDINARY_ENABLED = (
+    os.environ.get('CLOUD_NAME_CLOUDINARY')
+    and not ON_PYTHONANYWHERE
+)
 
 if CLOUDINARY_ENABLED:
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
-    LOCAL_DEFAULT_IMAGE = '/media/item_pics/default.jpg'
-    DEFAULT_FOLDER = 'item_pics'
+    DEFAULT_FOLDER = 'item_pics'  # ✅ FIXED
     DEFAULT_PUBLIC_ID = 'default'
     DEFAULT_IMAGE_URL = None
 
+else:
+    # Fallback for PythonAnywhere free tier
+    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+    DEFAULT_IMAGE_URL = '/media/item_pics/default.jpg'
 
+# =========================
+# CORS
+# =========================
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
@@ -84,6 +99,9 @@ CSRF_COOKIE_SAMESITE = 'Lax'
 CSRF_COOKIE_SECURE = False
 CSRF_COOKIE_HTTPONLY = False
 
+# =========================
+# REST FRAMEWORK
+# =========================
 REST_FRAMEWORK = {
     'DEFAULT_PARSER_CLASSES': [
         'rest_framework.parsers.JSONParser',
@@ -92,6 +110,9 @@ REST_FRAMEWORK = {
     ]
 }
 
+# =========================
+# MIDDLEWARE
+# =========================
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -106,6 +127,9 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'BenkizBakers.urls'
 
+# =========================
+# TEMPLATES
+# =========================
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -124,6 +148,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'BenkizBakers.wsgi.application'
 
+# =========================
+# DATABASE
+# =========================
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -131,6 +158,9 @@ DATABASES = {
     }
 }
 
+# =========================
+# PASSWORD VALIDATION
+# =========================
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -138,11 +168,17 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
+# =========================
+# INTERNATIONALIZATION
+# =========================
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
+# =========================
+# STATIC & MEDIA
+# =========================
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
@@ -152,4 +188,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+# =========================
+# DEFAULT PK
+# =========================
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
