@@ -64,17 +64,17 @@ CLOUDINARY_ENABLED = bool(os.environ.get('CLOUD_NAME_CLOUDINARY'))
 if CLOUDINARY_ENABLED:
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
-LOCAL_DEFAULT_IMAGE = '/media/item_pics/default.jpg'
-DEFAULT_FOLDER = '/item_pics'
-DEFAULT_PUBLIC_ID = 'default'
-DEFAULT_IMAGE_URL = None
+    LOCAL_DEFAULT_IMAGE = '/media/item_pics/default.jpg'
+    DEFAULT_FOLDER = '/item_pics'
+    DEFAULT_PUBLIC_ID = 'default'
+    DEFAULT_IMAGE_URL = None
 
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    "https://safariocom.pythonanywhere.com",
-    "https://benkizbakers.onrender.com",
+    "https://benkizbakers.pythonanywhere.com",
+    "https://benkiz.vercel.app",
     "http://127.0.0.1:8000",
 ]
 
