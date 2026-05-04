@@ -29,4 +29,4 @@ class MainConfig(AppConfig):
                 public_id=settings.DEFAULT_PUBLIC_ID,
                 overwrite = True
             )
-        settings.DEFAULT_IMAGE_ULR = result['secure_url']
+        settings.DEFAULT_IMAGE_URL = result['secure_url']

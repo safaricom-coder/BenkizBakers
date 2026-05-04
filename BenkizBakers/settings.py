@@ -65,7 +65,7 @@ if CLOUDINARY_ENABLED:
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
     LOCAL_DEFAULT_IMAGE = '/media/item_pics/default.jpg'
-    DEFAULT_FOLDER = '/item_pics'
+    DEFAULT_FOLDER = 'item_pics'
     DEFAULT_PUBLIC_ID = 'default'
     DEFAULT_IMAGE_URL = None
 
