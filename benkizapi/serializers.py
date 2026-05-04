@@ -11,13 +11,13 @@ class CakeCategorySerializer(serializers.ModelSerializer):
 
 class ItemSerializer(serializers.ModelSerializer):
     category = CakeCategorySerializer(many=True, read_only=True)
-    thumbnail = serializers.SerializerMethodField()
+    thumbnail_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Item
         fields = "__all__"
 
-    def get_thumbnail(self, obj):
+    def get_thumbnail_url(self, obj):
         request = self.context.get("request")
 
         if not obj.thumbnail:
@@ -25,14 +25,10 @@ class ItemSerializer(serializers.ModelSerializer):
 
         url = obj.thumbnail.url
 
-        if url.startswith("http://") or url.startswith("https://"):
-            return url
-
         if request:
-            # return request.build_absolute_uri(url)
-            return "https://benkizbakers.pythonanywhere.com/"+url
+            return request.build_absolute_uri(url)
 
-        return url
+        return f"https://benkizbakers.pythonanywhere.com{url}"
 
 class CartItemSerializer(serializers.ModelSerializer):
     class Meta:
