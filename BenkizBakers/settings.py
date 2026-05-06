@@ -90,7 +90,6 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5173",
     "https://benkizbakers.pythonanywhere.com",
     "https://benkiz.vercel.app",
-    ".vercel.app",
     "http://127.0.0.1:8000",
 ]
 
@@ -146,6 +145,8 @@ TEMPLATES = [
         },
     },
 ]
+
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 WSGI_APPLICATION = 'BenkizBakers.wsgi.application'
 
