@@ -205,32 +205,42 @@ def me_view(request):
 
 # ── ITEMS ──
 
+from django.db.models import Q
+
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def items_list(request):
-    queryset = Item.objects.order_by('-id')
-    search = request.GET.get('search', '').strip()
-    category = request.GET.get('category', '').strip()
+    queryset = Item.objects.all().order_by('-id')
+
+    search = request.GET.get('search', '').strip().lower()
+    category = request.GET.get('category', '').strip().lower()
     limit = request.GET.get('limit', None)
 
+    # 🔍 SEARCH (fixed for ManyToMany)
     if search:
         queryset = queryset.filter(
             Q(name__icontains=search) |
             Q(description__icontains=search) |
             Q(additionalinfo__icontains=search) |
-            Q(category__icontains=search)
-        )
+            Q(category__name__icontains=search)
+        ).distinct()
+
+    # 🏷️ CATEGORY FILTER (FIXED)
     if category and category != 'all':
-        queryset = queryset.filter(category=category)
+        queryset = queryset.filter(
+            Q(category__name__iexact=category) |
+            Q(category__name__icontains=category)
+        ).distinct()
+
+    # 🔢 LIMIT
     if limit:
         try:
             queryset = queryset[:int(limit)]
         except (ValueError, TypeError):
             pass
 
-    serializer = ItemSerializer(queryset, many=True)
+    serializer = ItemSerializer(queryset, many=True, context={'request': request})
     return Response(serializer.data)
-
 
 @api_view(['GET'])
 @permission_classes([AllowAny])

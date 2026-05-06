@@ -30,6 +30,7 @@ class ItemSerializer(serializers.ModelSerializer):
 
         return f"https://benkizbakers.pythonanywhere.com{url}"
 
+
 class CartItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = CartItem
@@ -114,8 +115,3 @@ class HeroBannerSerializer(serializers.ModelSerializer):
     class Meta:
         model = HeroBanner
         fields = '__all__'
-
-
-class ConfirmPayment(serializers.ModelSerializer):
-    class Meta:
-        pass

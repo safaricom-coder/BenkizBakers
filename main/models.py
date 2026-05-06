@@ -47,8 +47,16 @@ cakecategories = (
 )
 
 
+from django.utils.text import slugify
+
 class CakeCategory(models.Model):
     name = models.CharField(max_length=50)
+    slug = models.SlugField(unique=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        self.name = self.name.lower().strip()
+        self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
