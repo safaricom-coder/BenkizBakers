@@ -63,25 +63,9 @@ cloudinary.config(
 )
 
 # Detect PythonAnywhere
-ON_PYTHONANYWHERE = "pythonanywhere" in sys.platform
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
-CLOUDINARY_ENABLED = (
-    os.environ.get('CLOUD_NAME_CLOUDINARY')
-    and not ON_PYTHONANYWHERE
-)
-
-if CLOUDINARY_ENABLED:
-    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
-    DEFAULT_FOLDER = 'item_pics'  # ✅ FIXED
-    DEFAULT_PUBLIC_ID = 'default'
-    DEFAULT_IMAGE_URL = None
-
-else:
-    # Fallback for PythonAnywhere free tier
-    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
-    DEFAULT_IMAGE_URL = '/media/item_pics/default.jpg'
-
+MEDIA_URL = '/media/'
 # =========================
 # CORS
 # =========================
@@ -194,3 +178,12 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # DEFAULT PK
 # =========================
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}

@@ -20,6 +20,7 @@ urlpatterns = [
 
     # ── Items ──
     path('items/', views.items_list),
+    # path('items/?category=<str:category>',views.filter_by_category),
     path('items/featured/', views.items_featured),
     path('items/<int:id>/', views.item_detail),
     path('categories/', views.categories_list),
