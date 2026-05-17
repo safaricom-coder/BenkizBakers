@@ -78,6 +78,8 @@ class Item(models.Model):
     numberOfItems = models.PositiveIntegerField(default=0)
     soldUnits = models.PositiveIntegerField(default=0)
 
+    cloudinary_image_link = models.CharField(max_length=500, blank=True, null=True)
+
     category = models.ManyToManyField('main.CakeCategory')
     is_wished = models.BooleanField(default=False)
 
