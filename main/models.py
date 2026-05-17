@@ -91,7 +91,6 @@ class Item(models.Model):
     cloudinary_image_link = models.CharField(max_length=500, blank=True, null=True)
 
     category = models.ManyToManyField('main.CakeCategory')
-    is_wished = models.BooleanField(default=False)
 
     def get_thumbnail_url(self):
         if self.thumbnail:
