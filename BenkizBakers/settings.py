@@ -55,15 +55,18 @@ INSTALLED_APPS = [
 # =========================
 import cloudinary
 
-cloudinary.config(
-    cloud_name=os.environ.get("CLOUD_NAME_CLOUDINARY"),
-    api_key=os.environ.get("API_KEY_CLOUDINARY"),
-    api_secret=os.environ.get("API_SECRET_CLOUDINARY"),
-    secure=True
-)
+# cloudinary.config(
+#     cloud_name=os.environ.get("CLOUD_NAME_CLOUDINARY"),
+#     api_key=os.environ.get("API_KEY_CLOUDINARY"),
+#     api_secret=os.environ.get("API_SECRET_CLOUDINARY"),
+#     secure=True
+# )
 
-# Detect PythonAnywhere
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
+}
 
 MEDIA_URL = '/media/'
 # =========================
@@ -168,8 +171,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
