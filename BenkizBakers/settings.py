@@ -10,7 +10,8 @@ from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Load .env
-load_dotenv(BASE_DIR / ".env")
+# load_dotenv(BASE_DIR / ".env") # for offline
+load_dotenv("/home/benkizbakers/.env") # to support cloudinary
 
 # =========================
 # BASIC SETTINGS
@@ -188,8 +189,3 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # DEFAULT PK
 # =========================
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-
-print("CLOUD NAME:", os.environ.get('CLOUDINARY_CLOUD_NAME'))
-print("API KEY:", os.environ.get('CLOUDINARY_API_KEY'))
-print("API SECRET:", os.environ.get('CLOUDINARY_API_SECRET'))
