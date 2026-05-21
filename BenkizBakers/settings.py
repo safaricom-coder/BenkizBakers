@@ -189,3 +189,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # =========================
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+print("CLOUD NAME:", os.environ.get('CLOUDINARY_CLOUD_NAME'))
+print("API KEY:", os.environ.get('CLOUDINARY_API_KEY'))
+print("API SECRET:", os.environ.get('CLOUDINARY_API_SECRET'))
