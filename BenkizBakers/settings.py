@@ -55,12 +55,10 @@ INSTALLED_APPS = [
 # =========================
 import cloudinary
 
-# cloudinary.config(
-#     cloud_name=os.environ.get("CLOUD_NAME_CLOUDINARY"),
-#     api_key=os.environ.get("API_KEY_CLOUDINARY"),
-#     api_secret=os.environ.get("API_SECRET_CLOUDINARY"),
-#     secure=True
-# )
+
+# =========================
+# CLOUDINARY CONFIG
+# =========================
 
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
@@ -68,7 +66,18 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
 }
 
-MEDIA_URL = '/media/'
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
+# MEDIA_URL = '/media/'   #for local storage only
+
+
 # =========================
 # CORS
 # =========================
@@ -172,19 +181,11 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = BASE_DIR / 'media' for # offline or local
 
 # =========================
 # DEFAULT PK
 # =========================
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-STORAGES = {
-    "default": {
-        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
-    },
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-}
