@@ -60,19 +60,22 @@ INSTALLED_APPS = [
 # =========================
 # CLOUDINARY CONFIG
 # =========================
+# =========================
+# CLOUDINARY (BULLETPROOF CONFIG)
+# =========================
 import cloudinary
 
 cloudinary.config(
-    cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
-    api_key=os.environ.get("CLOUDINARY_API_KEY"),
-    api_secret=os.environ.get("CLOUDINARY_API_SECRET"),
+    cloud_name="dw0l7b86h",
+    api_key="218663542572455",
+    api_secret="cSm0yCsOWEmoMH2Bxb32hYBvg-s",
     secure=True,
 )
 
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
-    'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
-    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
+    "CLOUD_NAME": "dw0l7b86h",
+    "API_KEY": "218663542572455",
+    "API_SECRET": "cSm0yCsOWEmoMH2Bxb32hYBvg-s",
 }
 
 STORAGES = {
