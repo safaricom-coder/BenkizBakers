@@ -64,6 +64,7 @@ INSTALLED_APPS = [
 # CLOUDINARY (BULLETPROOF CONFIG)
 # =========================
 import cloudinary
+import cloudinary.uploader
 
 cloudinary.config(
     cloud_name="dw0l7b86h",
@@ -71,6 +72,8 @@ cloudinary.config(
     api_secret="cSm0yCsOWEmoMH2Bxb32hYBvg-s",
     secure=True,
 )
+
+cloudinary.config(keep_alive=False)
 
 CLOUDINARY_STORAGE = {
     "CLOUD_NAME": "dw0l7b86h",
