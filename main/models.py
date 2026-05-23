@@ -74,10 +74,12 @@ class CakeCategory(models.Model):
 class Item(models.Model):
     name = models.CharField(max_length=50)
 
-    thumbnail = models.ImageField(
-        upload_to='item_pics/',
+    thumbnail = CloudinaryField(
+        "image",
+        folder="item_pics",
         blank=True,
-        null=True
+        null=True,
+        resource_type="image",
     )
 
     description = models.CharField(max_length=1000, blank=True)
