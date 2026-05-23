@@ -10,13 +10,17 @@ from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Load .env
-# load_dotenv(BASE_DIR / ".env") # for offline
-load_dotenv("/home/benkizbakers/.env") # to support cloudinary
+# load_dotenv(BASE_DIR / ".env")  # for offline/local
+load_dotenv("/home/benkizbakers/.env")  # PythonAnywhere
 
 # =========================
 # BASIC SETTINGS
 # =========================
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-fallback-change-in-production')
+SECRET_KEY = os.environ.get(
+    'SECRET_KEY',
+    'django-insecure-fallback-change-in-production'
+)
+
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = [
@@ -35,6 +39,7 @@ CSRF_TRUSTED_ORIGINS = [
 # =========================
 INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,6 +49,7 @@ INSTALLED_APPS = [
 
     'main.apps.MainConfig',
     'benkizapi',
+
     'corsheaders',
     'rest_framework',
 
@@ -56,10 +62,12 @@ INSTALLED_APPS = [
 # =========================
 import cloudinary
 
-
-# =========================
-# CLOUDINARY CONFIG
-# =========================
+cloudinary.config(
+    cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.environ.get("CLOUDINARY_API_KEY"),
+    api_secret=os.environ.get("CLOUDINARY_API_SECRET"),
+    secure=True,
+)
 
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
@@ -76,8 +84,8 @@ STORAGES = {
     },
 }
 
-# MEDIA_URL = '/media/'   #for local storage only
-
+# Compatibility/support
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # =========================
 # CORS
@@ -85,13 +93,15 @@ STORAGES = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5000",
     "http://127.0.0.1:5173",
+    "http://127.0.0.1:8000",
+
     "https://benkizbakers.pythonanywhere.com",
     "https://benkiz.vercel.app",
-    "http://127.0.0.1:8000",
 ]
 
 SESSION_COOKIE_SAMESITE = 'Lax'
 SESSION_COOKIE_SECURE = False
+
 CSRF_COOKIE_SAMESITE = 'Lax'
 CSRF_COOKIE_SECURE = False
 CSRF_COOKIE_HTTPONLY = False
@@ -112,8 +122,10 @@ REST_FRAMEWORK = {
 # =========================
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -130,8 +142,11 @@ ROOT_URLCONF = 'BenkizBakers.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+
         'DIRS': [BASE_DIR / 'templates'],
+
         'APP_DIRS': True,
+
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -161,29 +176,41 @@ DATABASES = {
 # PASSWORD VALIDATION
 # =========================
 AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'
+    },
 ]
 
 # =========================
 # INTERNATIONALIZATION
 # =========================
 LANGUAGE_CODE = 'en-us'
+
 TIME_ZONE = 'UTC'
+
 USE_I18N = True
+
 USE_TZ = True
 
 # =========================
-# STATIC & MEDIA
+# STATIC FILES
 # =========================
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# MEDIA_URL = '/media/'
-# MEDIA_ROOT = BASE_DIR / 'media' for # offline or local
+STATICFILES_DIRS = [
+    BASE_DIR / 'static'
+]
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # =========================
 # DEFAULT PK
