@@ -60,26 +60,22 @@ INSTALLED_APPS = [
 # =========================
 # CLOUDINARY CONFIG
 # =========================
-# =========================
-# CLOUDINARY (BULLETPROOF CONFIG)
-# =========================
 import cloudinary
 import cloudinary.uploader
+import cloudinary.api
 
 cloudinary.config(
-    cloud_name="dw0l7b86h",
-    api_key="218663542572455",
-    api_secret="cSm0yCsOWEmoMH2Bxb32hYBvg-s",
+    cloud_name=os.environ.get("CLOUD_NAME"),
+    api_key=os.environ.get("CLOUD_API_KEY"),
+    api_secret=os.environ.get("CLOUD_API_SECRET"),
     secure=True,
-    api_proxy = "http://proxy.server:3128" 
+    keep_alive=False,
 )
 
-cloudinary.config(keep_alive=False)
-
 CLOUDINARY_STORAGE = {
-    "CLOUD_NAME": "dw0l7b86h",
-    "API_KEY": "218663542572455",
-    "API_SECRET": "cSm0yCsOWEmoMH2Bxb32hYBvg-s",
+    "CLOUD_NAME": os.environ.get("CLOUD_NAME"),
+    "API_KEY": os.environ.get("CLOUD_API_KEY"),
+    "API_SECRET": os.environ.get("CLOUD_API_SECRET"),
 }
 
 STORAGES = {
@@ -90,6 +86,9 @@ STORAGES = {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
+
+# Compatibility/support
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # Compatibility/support
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
