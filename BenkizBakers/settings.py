@@ -71,6 +71,7 @@ cloudinary.config(
     api_key="218663542572455",
     api_secret="cSm0yCsOWEmoMH2Bxb32hYBvg-s",
     secure=True,
+    api_proxy = "http://proxy.server:3128" 
 )
 
 cloudinary.config(keep_alive=False)
