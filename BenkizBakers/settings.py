@@ -27,6 +27,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "benkizbakers.pythonanywhere.com",
     ".vercel.app",
+    ".cloudinary.com"
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -86,9 +87,6 @@ STORAGES = {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
-
-# Compatibility/support
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # Compatibility/support
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
