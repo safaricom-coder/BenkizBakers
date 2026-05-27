@@ -17,6 +17,7 @@ from .models import *
 from django.http import JsonResponse
 import os
 
+@api_view(['GET'])
 def test_env(request):
     return JsonResponse({
         "cloud_name": os.environ.get("CLOUDINARY_CLOUD_NAME")
