@@ -7,6 +7,20 @@ import os
 import sys
 from dotenv import load_dotenv
 
+import cloudinary
+
+
+cloudinary.config(
+    cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.environ.get("CLOUDINARY_API_KEY"),
+    api_secret=os.environ.get("CLOUDINARY_API_SECRET"),
+    secure=True,
+    keep_alive=False,
+)
+
+import cloudinary.api
+import cloudinary.uploader
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Load .env
@@ -32,6 +46,7 @@ ALLOWED_HOSTS = [
 CSRF_TRUSTED_ORIGINS = [
     "https://benkizbakers.pythonanywhere.com",
     "https://benkiz.vercel.app",
+    
 ]
 
 # =========================
@@ -60,17 +75,7 @@ INSTALLED_APPS = [
 # =========================
 # CLOUDINARY CONFIG
 # =========================
-import cloudinary
-import cloudinary.uploader
-import cloudinary.api
 
-cloudinary.config(
-    cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
-    api_key=os.environ.get("CLOUDINARY_API_KEY"),
-    api_secret=os.environ.get("CLOUDINARY_API_SECRET"),
-    secure=True,
-    keep_alive=False,
-)
 
 CLOUDINARY_STORAGE = {
     "CLOUD_NAME": os.environ.get("CLOUDINARY_CLOUD_NAME"),
