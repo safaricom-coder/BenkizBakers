@@ -74,13 +74,7 @@ class CakeCategory(models.Model):
 class Item(models.Model):
     name = models.CharField(max_length=50)
 
-    thumbnail = CloudinaryField(
-        "image",
-        folder="item_pics",
-        blank=True,
-        null=True,
-        resource_type="image",
-    )
+    thumbnail = models.URLField(blank=True, null=True)
 
     description = models.CharField(max_length=1000, blank=True)
     additionalinfo = models.TextField(blank=True)
@@ -90,14 +84,7 @@ class Item(models.Model):
     numberOfItems = models.PositiveIntegerField(default=0)
     soldUnits = models.PositiveIntegerField(default=0)
 
-    cloudinary_image_link = models.CharField(max_length=500, blank=True, null=True)
-
     category = models.ManyToManyField('main.CakeCategory')
-
-    def get_thumbnail_url(self):
-        if self.thumbnail:
-            return self.thumbnail.url
-        return '/media/item_pics/default.jpg'  # fallback
 
     def __str__(self):
         return self.name
