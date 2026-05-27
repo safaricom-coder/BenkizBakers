@@ -9,6 +9,12 @@ from dotenv import load_dotenv
 
 import cloudinary
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Load .env
+# load_dotenv(BASE_DIR / ".env")  # for offline/local
+load_dotenv("/home/benkizbakers/.env")  # PythonAnywhere
+
 
 cloudinary.config(
     cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
@@ -20,12 +26,6 @@ cloudinary.config(
 
 import cloudinary.api
 import cloudinary.uploader
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-# Load .env
-# load_dotenv(BASE_DIR / ".env")  # for offline/local
-load_dotenv("/home/benkizbakers/.env")  # PythonAnywhere
 
 # =========================
 # BASIC SETTINGS
