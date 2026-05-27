@@ -14,6 +14,14 @@ from main.models import *
 from .models import *
 
 
+from django.http import JsonResponse
+import os
+
+def test_env(request):
+    return JsonResponse({
+        "cloud_name": os.environ.get("CLOUDINARY_CLOUD_NAME")
+    })
+
 # ─────────────────────────────────────────────
 # LEGACY ENDPOINTS (kept for compatibility)
 # ─────────────────────────────────────────────
