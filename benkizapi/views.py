@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
+
 from django.middleware.csrf import get_token
 from django.http import HttpResponse, JsonResponse
 from django.contrib import auth
@@ -54,7 +55,7 @@ def getItem(request, id):
         serializer = ItemSerializer(item)
         return Response(serializer.data)
     elif request.method == 'PATCH':
-        serializer = ItemModifierSerializer(item, data=request.data, partial=True)
+        serializer = ItemSerializer(item, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -146,33 +147,136 @@ def handle_payment_callback(request):
 
 # ── AUTH ──
 
+
+def setSecureCookie(response,access_token,refresh_token):
+
+    access = access_token
+    refresh = refresh_token
+
+    response = JsonResponse({
+        "success": True
+    })
+
+    response.set_cookie(
+        "access_token",
+        access,
+        httponly=True,
+        secure=True,
+        samesite="None",
+        max_age=900
+    )
+
+    response.set_cookie(
+        "refresh_token",
+        refresh,
+        httponly=True,
+        secure=True,
+        samesite="None",
+        max_age=604800
+    )
+
+    return response
+
+
+
+
 @api_view(['GET'])
-def csrf_token_view(request):
-    token = get_token(request)
-    return Response({'csrfToken': token})
+@ensure_csrf_cookie
+def csrf_token_view():
+    return JsonResponse({"success": True})     
+
+def set_jwt_cookies(response, user):
+    from rest_framework_simplejwt.tokens import RefreshToken
+    refresh = RefreshToken.for_user(user)
+
+    response.set_cookie(
+        "access_token",
+        str(refresh.access_token),
+        httponly=True,
+        secure=False,
+        samesite="Lax",
+        max_age=900
+    )
+
+    response.set_cookie(
+        "refresh_token",
+        str(refresh),
+        httponly=True,
+        secure=False,
+        samesite="Lax",
+        max_age=604800
+    )
+
+    return response
 
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login_view(request):
-    username = request.data.get('username', '')
-    password = request.data.get('password', '')
+    username = request.data.get('username', '').strip()
+    password = request.data.get('password', '').strip()
+
     user = auth.authenticate(request, username=username, password=password)
+
     if user is None:
-        return Response({'error': 'Invalid credentials.'}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response(
+            {'error': 'Invalid credentials.'},
+            status=status.HTTP_401_UNAUTHORIZED
+        )
+
     auth.login(request, user)
-    profile = UserProfile.objects.filter(user=user).first()
-    return Response({
-        'user': UserSerializer(user).data,
-        'profile': UserProfileSerializer(profile).data if profile else None,
+
+    response = JsonResponse({
+        "success": True
     })
 
+    response = set_jwt_cookies(response, user)  # 🔥 IMPORTANT: capture return
+
+    return response  # 🔥 THIS WAS MISSING
+
+def refresh(request):
+    from rest_framework_simplejwt.tokens import RefreshToken
+    token = request.COOKIES.get(
+        "refresh_token"
+    )
+
+    if not token:
+        return JsonResponse(status=401)
+
+    refresh = RefreshToken(token)
+
+    response = JsonResponse({
+        "success": True
+    })
+
+    response.set_cookie(
+        "access_token",
+        str(refresh.access_token),
+        httponly=True,
+        secure=False,
+        samesite="Lax",
+        max_age=900
+    )
+
+    return response
+
+    
+def deleteCookies(response):
+    response.delete_cookie(
+        "access_token"
+    )
+
+    response.delete_cookie(
+        "refresh_token"
+    )
+    return response    
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def logout_view(request):
     auth.logout(request)
-    return Response({'detail': 'Logged out.'})
+    response = Response({'detail': 'Logged out.'})
+    return deleteCookies(response)
 
 
 @api_view(['POST'])
@@ -225,7 +329,7 @@ def items_list(request):
     category = request.GET.get('category', '').strip().lower()
     limit = request.GET.get('limit', None)
 
-    # 🔍 SEARCH (fixed for ManyToMany)
+    # SEARCH (fixed for ManyToMany)
     if search:
         queryset = queryset.filter(
             Q(name__icontains=search) |
@@ -241,14 +345,14 @@ def items_list(request):
             Q(category__name__icontains=category)
         ).distinct()
 
-    # 🔢 LIMIT
+    # LIMIT
     if limit:
         try:
             queryset = queryset[:int(limit)]
         except (ValueError, TypeError):
             pass
 
-    serializer = ItemSerializer(queryset, many=True, context={'request': request})
+    serializer = ItemModifierSerializer(queryset, many=True, context={'request': request})
     return Response(serializer.data)
 
 @api_view(['GET'])

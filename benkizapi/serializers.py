@@ -6,31 +6,17 @@ from django.contrib.auth.models import User
 class CakeCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = CakeCategory
-        fields = ["id", "name"]
+        fields = ["name"]
 
 
 class ItemSerializer(serializers.ModelSerializer):
-    category = CakeCategorySerializer(many=True, read_only=True)
-    thumbnail_url = serializers.SerializerMethodField()
-
+    # category= serializers.SlugRelatedField(many=True,slug_field='name', read_only=True)
+    # category= serializers.SerializerMethodField()
+    category = CakeCategorySerializer(many=True,read_only=True)
     class Meta:
         model = Item
         fields = "__all__"
-
-    def get_thumbnail_url(self, obj):
-        request = self.context.get("request")
-
-        if not obj.thumbnail:
-            return None
-
-        url = obj.thumbnail.url
-
-        if request:
-            return request.build_absolute_uri(url)
-
-        return f"https://benkizbakers.pythonanywhere.com{url}"
-
-
+   
 class CartItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = CartItem
@@ -38,9 +24,10 @@ class CartItemSerializer(serializers.ModelSerializer):
 
 
 class ItemModifierSerializer(serializers.ModelSerializer):
+    category = CakeCategorySerializer(many=True,read_only=True)
     class Meta:
         model = Item
-        fields = ['name', 'description', 'price', 'numberOfItems', 'category']
+        fields = ['id','name', 'description', 'price', 'numberOfItems', 'category']
 
 
 class UserSerializer(serializers.ModelSerializer):

@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 import datetime
 from django.conf import settings
 from cloudinary.models import CloudinaryField
-import cloudinary.uploader
 
 # Create your models here.
 
