@@ -147,7 +147,10 @@ def handle_payment_callback(request):
 # ─────────────────────────────────────────────
 
 # ── AUTH ──
-
+@api_view(['GET'])
+@ensure_csrf_cookie
+def csrf_token_view(request):
+    return Response({"success": True})
 
 def setSecureCookie(response,access_token,refresh_token):
 
