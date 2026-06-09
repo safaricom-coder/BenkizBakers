@@ -264,10 +264,11 @@ def set_tokens(response, user):
 
 
 
-@csrf_exempt
 @api_view(['POST'])
+@csrf_exempt
 @permission_classes([AllowAny])
 def refresh(request):
+
     token = request.COOKIES.get("refresh_token")
 
     if not token:
