@@ -152,65 +152,6 @@ def handle_payment_callback(request):
 def csrf_token_view(request):
     return Response({"success": True})
 
-def setSecureCookie(response,access_token,refresh_token):
-
-    access = access_token
-    refresh = refresh_token
-
-    response = JsonResponse({
-        "success": True
-    })
-
-    response.set_cookie(
-        "access_token",
-        access,
-        httponly=True,
-        secure=True,
-        domain=".pythonanywhere.com",
-        samesite="None",
-        max_age=900
-    )
-
-    response.set_cookie(
-        "refresh_token",
-        refresh,
-        httponly=True,
-        secure=True,
-        samesite="None",
-        domain=".pythonanywhere.com",
-        max_age=604800
-    )
-
-    return response
-
-
-
-def set_jwt_cookies(response, user):
-    from rest_framework_simplejwt.tokens import RefreshToken
-    refresh = RefreshToken.for_user(user)
-
-    response.set_cookie(
-        "access_token",
-        str(refresh.access_token),
-        httponly=True,
-        secure=False,
-        domain=".pythonanywhere.com",
-        samesite="Lax",
-        max_age=900
-    )
-
-    response.set_cookie(
-        "refresh_token",
-        str(refresh),
-        httponly=True,
-        secure=False,
-        samesite="Lax",
-        domain=".pythonanywhere.com",
-        max_age=604800
-    )
-
-    return response
-
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -223,15 +164,16 @@ def login_view(request):
     if not user:
         return Response({"error": "Invalid credentials"}, status=401)
 
+    role = "CUSTOMER"
     if user.is_superuser:
-        userdata = UserSerializer(user).data | {"role":"SUPER_ADMIN"}
-    elif user.is_staff and (not user.is_superuser):
-        userdata = UserSerializer(user).data | {"role":"ADMIN"}
-    else:
-        userdata = UserSerializer(user).data | {"role":"CUSTOMER"}
-    response = Response({
-        "user": userdata
-    })
+        role = "SUPER_ADMIN"
+    elif user.is_staff:
+        role = "ADMIN"
+
+    userdata = UserSerializer(user).data
+    userdata["role"] = role
+
+    response = Response({"user": userdata})
 
     return set_tokens(response, user)
 
@@ -249,9 +191,8 @@ def set_tokens(response, user):
         httponly=True,
         secure=True,
         samesite="None",
-        domain=".pythonanywhere.com",
         max_age=900,
-        path= "/"
+        path="/"
     )
 
     response.set_cookie(
@@ -260,9 +201,8 @@ def set_tokens(response, user):
         httponly=True,
         secure=True,
         samesite="None",
-        domain=".pythonanywhere.com",
         max_age=604800,
-        path= "/"
+        path="/"
     )
 
     return response
@@ -271,10 +211,8 @@ def set_tokens(response, user):
 
 
 @api_view(['POST'])
-@csrf_exempt
 @permission_classes([AllowAny])
 def refresh(request):
-
     token = request.COOKIES.get("refresh_token")
 
     if not token:
@@ -282,7 +220,7 @@ def refresh(request):
 
     try:
         refresh = RefreshToken(token)
-    except:
+    except Exception:
         return Response({"error": "Invalid token"}, status=401)
 
     response = Response({"success": True})
@@ -293,8 +231,8 @@ def refresh(request):
         httponly=True,
         secure=True,
         samesite="None",
-        domain=".pythonanywhere.com",
-        max_age=900
+        max_age=900,
+        path="/"
     )
 
     return response
@@ -307,8 +245,8 @@ def refresh(request):
 def logout_view(request):
     response = Response({"success": True})
 
-    response.delete_cookie("access_token")
-    response.delete_cookie("refresh_token")
+    response.delete_cookie("access_token", path="/")
+    response.delete_cookie("refresh_token", path="/")
 
     return response
 
