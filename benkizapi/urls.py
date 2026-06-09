@@ -17,6 +17,7 @@ urlpatterns = [
     path('auth/logout/', views.logout_view),
     path('auth/register/', views.register_view),
     path('auth/me/', views.me_view),
+    path('auth/refresh/', views.refresh),
 
     # ── Items ──
     path('items/', views.items_list),
