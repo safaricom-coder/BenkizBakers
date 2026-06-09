@@ -242,7 +242,8 @@ def set_tokens(response, user):
         httponly=True,
         secure=True,
         samesite="None",
-        max_age=900
+        max_age=900,
+        path= "/"
     )
 
     response.set_cookie(
@@ -251,7 +252,8 @@ def set_tokens(response, user):
         httponly=True,
         secure=True,
         samesite="None",
-        max_age=604800
+        max_age=604800,
+        path= "/"
     )
 
     return response
