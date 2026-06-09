@@ -74,7 +74,9 @@ class Item(models.Model):
     name = models.CharField(max_length=50)
 
     thumbnail = models.URLField(blank=True, null=True)
+    thumbnail_public_id = models.CharField(max_length=255, blank=True, null=True)
 
+    
     description = models.CharField(max_length=1000, blank=True)
     additionalinfo = models.TextField(blank=True)
     price = models.DecimalField(decimal_places=2, max_digits=20)

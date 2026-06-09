@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views
+from . import views,adminViews
 
 urlpatterns = [
     # ── Legacy endpoints ──
@@ -67,4 +67,9 @@ urlpatterns = [
 
     # ── Stats ──
     path('stats/', views.stats_view),
+
+
+    path('admin/products/',adminViews.getAdminProducts),
+
+    path('admin/products/edit/',adminViews.editAdminProduct),
 ]

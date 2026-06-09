@@ -224,15 +224,27 @@ def login_view(request):
             status=status.HTTP_401_UNAUTHORIZED
         )
 
-    auth.login(request, user)
+    # auth.login(request, user) ------> this duplicated my login flow
+    userSerializer = UserSerializer(user)
+    profileExists = UserProfile.objects.filter(user=user).exists()
+    if profileExists:
+        profile = UserProfile.objects.get(user=user)
+    else:
+        profile = UserProfile.objects.create(user=user)
+    profileserializer = UserProfileSerializer(profile)
+    userSerializedData = userSerializer.data
 
-    response = JsonResponse({
-        "success": True
-    })
+    if user.is_superuser and user.is_staff:
+        userSerializedData = userSerializedData | {"role":"SUPER_ADMIN"}
+    elif user.is_staff and (not user.is_superuser) :
+        userSerializedData = userSerializedData | {"role":"ADMIN"}
+    else:
+        userSerializedData = userSerializedData | {"role":"CUSTOMER"}
+    response = Response({"user":userSerializedData,"profile":profileserializer.data},status=status.HTTP_200_OK)
 
-    response = set_jwt_cookies(response, user)  # 🔥 IMPORTANT: capture return
+    response = set_jwt_cookies(response, user) 
 
-    return response  # 🔥 THIS WAS MISSING
+    return response  
 
 def refresh(request):
     from rest_framework_simplejwt.tokens import RefreshToken
@@ -352,7 +364,7 @@ def items_list(request):
         except (ValueError, TypeError):
             pass
 
-    serializer = ItemModifierSerializer(queryset, many=True, context={'request': request})
+    serializer = ItemSerializer(queryset, many=True, context={'request': request})
     return Response(serializer.data)
 
 @api_view(['GET'])
