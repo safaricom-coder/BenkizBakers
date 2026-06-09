@@ -166,6 +166,7 @@ def setSecureCookie(response,access_token,refresh_token):
         access,
         httponly=True,
         secure=True,
+        domain=".pythonanywhere.com",
         samesite="None",
         max_age=900
     )
@@ -176,6 +177,7 @@ def setSecureCookie(response,access_token,refresh_token):
         httponly=True,
         secure=True,
         samesite="None",
+        domain=".pythonanywhere.com",
         max_age=604800
     )
 
@@ -192,6 +194,7 @@ def set_jwt_cookies(response, user):
         str(refresh.access_token),
         httponly=True,
         secure=False,
+        domain=".pythonanywhere.com",
         samesite="Lax",
         max_age=900
     )
@@ -202,6 +205,7 @@ def set_jwt_cookies(response, user):
         httponly=True,
         secure=False,
         samesite="Lax",
+        domain=".pythonanywhere.com",
         max_age=604800
     )
 
@@ -245,6 +249,7 @@ def set_tokens(response, user):
         httponly=True,
         secure=True,
         samesite="None",
+        domain=".pythonanywhere.com",
         max_age=900,
         path= "/"
     )
@@ -255,6 +260,7 @@ def set_tokens(response, user):
         httponly=True,
         secure=True,
         samesite="None",
+        domain=".pythonanywhere.com",
         max_age=604800,
         path= "/"
     )
@@ -287,6 +293,7 @@ def refresh(request):
         httponly=True,
         secure=True,
         samesite="None",
+        domain=".pythonanywhere.com",
         max_age=900
     )
 
