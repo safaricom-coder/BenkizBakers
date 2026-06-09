@@ -53,3 +53,25 @@ def editAdminProduct(request):
         return JsonResponse({'message': 'Product updated successfully'}, status=200)
     except Item.DoesNotExist:
         return JsonResponse({'error': 'Product not found'}, status=404)
+
+@api_view(['CREATE'])
+@permission_classes([IsAuthenticated])
+def createAdminProduct(request):
+    data = json.loads(request.body)
+    name = data.get('name')
+    description = data.get('description')
+    price = data.get('price')
+
+    numberOfItems = data.get('numberOfItems')
+    thumbnail = data.get('thumbnail')
+    thumbnail_public_id = data.get('thumbnail_public_id')
+
+    item = Item.objects.create(
+        name=name,
+        description=description,
+        price=price,
+        numberOfItems=numberOfItems,
+        thumbnail=thumbnail,
+        thumbnail_public_id=thumbnail_public_id
+    )
+    return JsonResponse({'message': 'Product created successfully', 'id': item.id}, status=201)

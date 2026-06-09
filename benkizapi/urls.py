@@ -72,4 +72,5 @@ urlpatterns = [
     path('admin/products/',adminViews.getAdminProducts),
 
     path('admin/products/edit/',adminViews.editAdminProduct),
+    path('admin/products/create/',adminViews.createAdminProduct),
 ]

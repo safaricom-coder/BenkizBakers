@@ -17,17 +17,6 @@ load_dotenv("/home/benkizbakers/.env")  # PythonAnywhere
 # =========================
 # CLOUDINARY
 # =========================
-import cloudinary
-import cloudinary.api
-import cloudinary.uploader
-
-cloudinary.config(
-    cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
-    api_key=os.environ.get("CLOUDINARY_API_KEY"),
-    api_secret=os.environ.get("CLOUDINARY_API_SECRET"),
-    secure=True,
-    keep_alive=False,
-)
 
 
 
@@ -141,18 +130,6 @@ REST_FRAMEWORK = {
     ],
 }
 
-
-# SECURITY SETTINGS
-SECURE_SSL_REDIRECT = True
-
-SECURE_PROXY_SSL_HEADER = (
-    "HTTP_X_FORWARDED_PROTO",
-    "https",
-)
-
-SECURE_HSTS_SECONDS = 31536000
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
 
 # =========================
 # MIDDLEWARE
@@ -289,12 +266,12 @@ CORS_ALLOW_CREDENTIALS = True
 # SECURITY SETTINGS (FIXED)
 # =========================
 
-SECURE_SSL_REDIRECT = True
+# SECURE_SSL_REDIRECT = True
 
-SECURE_PROXY_SSL_HEADER = (
-    "HTTP_X_FORWARDED_PROTO",
-    "https",
-)
+# SECURE_PROXY_SSL_HEADER = (
+#     "HTTP_X_FORWARDED_PROTO",
+#     "https",
+# )
 
 SECURE_HSTS_SECONDS = 31536000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
@@ -302,8 +279,8 @@ SECURE_HSTS_PRELOAD = True
 
 
 # CRITICAL FIX FOR PYTHONANYWHERE + CROSS DOMAIN COOKIES
-# CSRF_COOKIE_DOMAIN = None
-# SESSION_COOKIE_DOMAIN = None
+CSRF_COOKIE_DOMAIN = None
+SESSION_COOKIE_DOMAIN = None
 
-CSRF_COOKIE_DOMAIN = ".pythonanywhere.com"
-SESSION_COOKIE_DOMAIN = ".pythonanywhere.com"
+# CSRF_COOKIE_DOMAIN = ".pythonanywhere.com"
+# SESSION_COOKIE_DOMAIN = ".pythonanywhere.com"

@@ -295,16 +295,6 @@ def refresh(request):
 
 
 
-def deleteCookies(response):
-    response.delete_cookie(
-        "access_token"
-    )
-
-    response.delete_cookie(
-        "refresh_token"
-    )
-    return response    
-
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def logout_view(request):
