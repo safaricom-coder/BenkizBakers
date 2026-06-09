@@ -1,6 +1,8 @@
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+from datetime import timedelta
+
 
 # =========================
 # BASE DIR
@@ -58,7 +60,6 @@ CSRF_TRUSTED_ORIGINS = [
 # =========================
 INSTALLED_APPS = [
     "whitenoise.runserver_nostatic",
-
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -75,6 +76,15 @@ INSTALLED_APPS = [
     "cloudinary",
     "cloudinary_storage",
 ]
+
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+
+    "ROTATE_REFRESH_TOKENS": True,
+
+}
 
 # =========================
 # CLOUDINARY STORAGE

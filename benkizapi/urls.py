@@ -12,7 +12,7 @@ urlpatterns = [
     path("handle_payment_callback/", views.handle_payment_callback),
 
     # ── Auth ──
-    path('auth/csrf/', views.csrf_token_view),
+    # path('auth/csrf/', views.csrf_token_view),
     path('auth/login/', views.login_view),
     path('auth/logout/', views.logout_view),
     path('auth/register/', views.register_view),

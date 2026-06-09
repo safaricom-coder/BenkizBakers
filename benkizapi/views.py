@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from django.middleware.csrf import get_token
 from django.http import HttpResponse, JsonResponse
@@ -179,12 +180,6 @@ def setSecureCookie(response,access_token,refresh_token):
 
 
 
-
-@api_view(['GET'])
-@ensure_csrf_cookie
-def csrf_token_view():
-    return JsonResponse({"success": True})     
-
 def set_jwt_cookies(response, user):
     from rest_framework_simplejwt.tokens import RefreshToken
     refresh = RefreshToken.for_user(user)
@@ -213,66 +208,87 @@ def set_jwt_cookies(response, user):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login_view(request):
-    username = request.data.get('username', '').strip()
-    password = request.data.get('password', '').strip()
+    username = request.data.get("username")
+    password = request.data.get("password")
 
-    user = auth.authenticate(request, username=username, password=password)
+    user = auth.authenticate(username=username, password=password)
 
-    if user is None:
-        return Response(
-            {'error': 'Invalid credentials.'},
-            status=status.HTTP_401_UNAUTHORIZED
-        )
+    if not user:
+        return Response({"error": "Invalid credentials"}, status=401)
 
-    # auth.login(request, user) ------> this duplicated my login flow
-    userSerializer = UserSerializer(user)
-    profileExists = UserProfile.objects.filter(user=user).exists()
-    if profileExists:
-        profile = UserProfile.objects.get(user=user)
+    if user.is_superuser:
+        userdata = UserSerializer(user).data | {"role":"SUPER_ADMIN"}
+    elif user.is_staff and (not user.is_superuser):
+        userdata = UserSerializer(user).data | {"role":"ADMIN"}
     else:
-        profile = UserProfile.objects.create(user=user)
-    profileserializer = UserProfileSerializer(profile)
-    userSerializedData = userSerializer.data
-
-    if user.is_superuser and user.is_staff:
-        userSerializedData = userSerializedData | {"role":"SUPER_ADMIN"}
-    elif user.is_staff and (not user.is_superuser) :
-        userSerializedData = userSerializedData | {"role":"ADMIN"}
-    else:
-        userSerializedData = userSerializedData | {"role":"CUSTOMER"}
-    response = Response({"user":userSerializedData,"profile":profileserializer.data},status=status.HTTP_200_OK)
-
-    response = set_jwt_cookies(response, user) 
-
-    return response  
-
-def refresh(request):
-    from rest_framework_simplejwt.tokens import RefreshToken
-    token = request.COOKIES.get(
-        "refresh_token"
-    )
-
-    if not token:
-        return JsonResponse(status=401)
-
-    refresh = RefreshToken(token)
-
-    response = JsonResponse({
-        "success": True
+        userdata = UserSerializer(user).data | {"role":"CUSTOMER"}
+    response = Response({
+        "user": userdata
     })
+
+    return set_tokens(response, user)
+
+
+
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.response import Response
+
+def set_tokens(response, user):
+    refresh = RefreshToken.for_user(user)
 
     response.set_cookie(
         "access_token",
         str(refresh.access_token),
         httponly=True,
-        secure=False,
-        samesite="Lax",
+        secure=True,
+        samesite="None",
+        max_age=900
+    )
+
+    response.set_cookie(
+        "refresh_token",
+        str(refresh),
+        httponly=True,
+        secure=True,
+        samesite="None",
+        max_age=604800
+    )
+
+    return response
+
+
+
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def refresh(request):
+    token = request.COOKIES.get("refresh_token")
+
+    if not token:
+        return Response({"error": "No refresh token"}, status=401)
+
+    try:
+        refresh = RefreshToken(token)
+    except:
+        return Response({"error": "Invalid token"}, status=401)
+
+    response = Response({"success": True})
+
+    response.set_cookie(
+        "access_token",
+        str(refresh.access_token),
+        httponly=True,
+        secure=True,
+        samesite="None",
         max_age=900
     )
 
     return response
 
-    
+
+
+
 def deleteCookies(response):
     response.delete_cookie(
         "access_token"
@@ -286,9 +302,12 @@ def deleteCookies(response):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def logout_view(request):
-    auth.logout(request)
-    response = Response({'detail': 'Logged out.'})
-    return deleteCookies(response)
+    response = Response({"success": True})
+
+    response.delete_cookie("access_token")
+    response.delete_cookie("refresh_token")
+
+    return response
 
 
 @api_view(['POST'])
@@ -310,7 +329,6 @@ def register_view(request):
     WishList.objects.create(user=user)
     CourseBasket.objects.create(user=user)
 
-    auth.login(request, user)
     return Response({
         'user': UserSerializer(user).data,
         'profile': UserProfileSerializer(profile).data,
