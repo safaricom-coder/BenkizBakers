@@ -261,7 +261,7 @@ def set_tokens(response, user):
 
 
 
-
+@csrf_exempt
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def refresh(request):
