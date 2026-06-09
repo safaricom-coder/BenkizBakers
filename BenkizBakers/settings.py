@@ -46,7 +46,7 @@ ALLOWED_HOSTS = [
     "localhost",
     "benkizbakers.pythonanywhere.com",
     ".vercel.app",
-    "http://127.0.0.1:5173"
+
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -110,11 +110,7 @@ DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 # CORS
 # =========================
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5000",
-    "http://127.0.0.1:5173",
-    "http://127.0.0.1:8000",
-
-    "https://benkizbakers.pythonanywhere.com",
+       "https://benkizbakers.pythonanywhere.com",
     "https://benkiz.vercel.app",
 ]
 
@@ -257,3 +253,54 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 # DEFAULT PK
 # =========================
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# =========================
+# COOKIES / CSRF (FIXED FOR PRODUCTION + CROSS DOMAIN VERCEL)
+# =========================
+
+SESSION_COOKIE_SAMESITE = "None"
+SESSION_COOKIE_SECURE = True
+
+CSRF_COOKIE_SAMESITE = "None"
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_HTTPONLY = False
+
+# 🔥 IMPORTANT FIX: allow frontend domain to receive CSRF cookie properly
+CSRF_TRUSTED_ORIGINS = [
+    "https://benkizbakers.pythonanywhere.com",
+    "https://benkiz.vercel.app",
+    "http://127.0.0.1:5173",
+]
+
+# =========================
+# CORS (OK BUT CLEANED ORDER MATTERS)
+# =========================
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5000",
+    "http://127.0.0.1:5173",
+    "http://127.0.0.1:8000",
+    "https://benkiz.vercel.app",
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
+
+# =========================
+# SECURITY SETTINGS (FIXED)
+# =========================
+
+SECURE_SSL_REDIRECT = True
+
+SECURE_PROXY_SSL_HEADER = (
+    "HTTP_X_FORWARDED_PROTO",
+    "https",
+)
+
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+
+# 🔥 CRITICAL FIX FOR PYTHONANYWHERE + CROSS DOMAIN COOKIES
+CSRF_COOKIE_DOMAIN = None
+SESSION_COOKIE_DOMAIN = None
