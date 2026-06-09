@@ -184,15 +184,20 @@ from rest_framework.response import Response
 
 def set_tokens(response, user):
     refresh = RefreshToken.for_user(user)
-
+    print(f'''
+    
+    done !
+    
+    ''')
     response.set_cookie(
         "access_token",
         str(refresh.access_token),
         httponly=True,
         secure=True,
         samesite="None",
+        domain=".pythonanywhere.com",
         max_age=900,
-        path="/"
+        path= "/"
     )
 
     response.set_cookie(
@@ -201,8 +206,9 @@ def set_tokens(response, user):
         httponly=True,
         secure=True,
         samesite="None",
+        domain=".pythonanywhere.com",
         max_age=604800,
-        path="/"
+        path= "/"
     )
 
     return response
