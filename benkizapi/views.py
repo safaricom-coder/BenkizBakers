@@ -261,7 +261,7 @@ def login_view(request):
 # REFRESH
 # -------------------------------------------------
 
-@api_view(["POST"])
+@api_view(["GET"])
 @permission_classes([AllowAny])
 def refresh(request):
 
