@@ -261,47 +261,29 @@ def login_view(request):
 # REFRESH
 # -------------------------------------------------
 
-@api_view(["GET"])
+@api_view(["POST"])
 @permission_classes([AllowAny])
 def refresh(request):
 
-    refresh_token = request.COOKIES.get(
-        "refresh_token"
-    )
+    refresh_token = request.data.get("refresh")
 
     if not refresh_token:
         return Response(
-            {
-                "error": "No refresh token"
-            },
+            {"error": "No refresh token provided"},
             status=401
         )
 
     try:
-        refresh_obj = RefreshToken(
-            refresh_token
-        )
-
+        refresh_obj = RefreshToken(refresh_token)
     except Exception:
-
         return Response(
-            {
-                "error": "Invalid refresh token"
-            },
+            {"error": "Invalid refresh token"},
             status=401
         )
 
-    response = Response({
-        "success": True
+    return Response({
+        "access": str(refresh_obj.access_token)
     })
-
-    response.set_cookie(
-        key="access_token",
-        value=str(refresh_obj.access_token),
-        **cookie_options(900)
-    )
-
-    return response
 
 
 # -------------------------------------------------
