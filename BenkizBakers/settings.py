@@ -153,7 +153,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5173",
 ]
 
-CORS_ALLOW_CREDENTIALS = True
+# CORS_ALLOW_CREDENTIALS = True
 
 # =========================
 # CSRF
@@ -168,12 +168,12 @@ CSRF_TRUSTED_ORIGINS = [
 # =========================
 # COOKIES
 # =========================
-SESSION_COOKIE_SECURE = True
-SESSION_COOKIE_SAMESITE = "None"
+# SESSION_COOKIE_SECURE = True
+# SESSION_COOKIE_SAMESITE = "None"
 
-CSRF_COOKIE_SECURE = True
-CSRF_COOKIE_SAMESITE = "None"
-CSRF_COOKIE_HTTPONLY = False
+# CSRF_COOKIE_SECURE = True
+# CSRF_COOKIE_SAMESITE = "None"
+# CSRF_COOKIE_HTTPONLY = False
 
 # IMPORTANT
 SESSION_COOKIE_DOMAIN = None
@@ -225,3 +225,34 @@ AUTH_PASSWORD_VALIDATORS = [
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 X_FRAME_OPTIONS = "SAMEORIGIN"
+
+
+# 1. Allowed Hosts & Trusted Origins
+ALLOWED_HOSTS = ["pythonanywhere.com","benkizbakers.pythonanywhere.com"]
+
+# Tell Django to trust requests coming from your online React application
+CSRF_TRUSTED_ORIGINS = ["https://benkiz.vercel.app", "https://benkiz.vercel.app"]
+CORS_ALLOWED_ORIGINS = ["https://benkiz.vercel.app", "https://benkiz.vercel.app"]
+
+# 2. Enable Credentials (Essential for sending/receiving cookies)
+CORS_ALLOW_CREDENTIALS = True
+
+# 3. Production HTTPS Security Settings
+SECURE_SSL_REDIRECT = True             # Redirect HTTP requests to HTTPS
+SESSION_COOKIE_SECURE = True           # Only send session cookies over HTTPS
+CSRF_COOKIE_SECURE = True              # Only send CSRF cookies over HTTPS
+
+# 4. SameSite Configuration for Cross-Site Cookies
+# This allows cookies to travel across different domains via HTTPS
+SESSION_COOKIE_SAMESITE = 'None'
+CSRF_COOKIE_SAMESITE = 'None'
+
+# 5. Keep HTTPOnly True for Authentication Session Cookies
+# This protects session IDs from cross-site scripting (XSS)
+SESSION_COOKIE_HTTPONLY = True 
+
+# 6. Set CSRF Cookie HTTPOnly to False so React can read it for headers
+CSRF_COOKIE_HTTPONLY = False
+
+# Tells Django it is securely behind an HTTPS proxy
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
