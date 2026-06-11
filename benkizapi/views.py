@@ -227,6 +227,21 @@ def login_view(request):
         password=request.data.get("password")
     )
 
+
+    if not user:
+        return Response({"error": "Invalid credentials"}, status=401)
+
+    role = "CUSTOMER"
+    if user.is_superuser:
+        role = "SUPER_ADMIN"
+    elif user.is_staff:
+        role = "ADMIN"
+
+    userdata = UserSerializer(user).data
+    userdata = userdata | {"role":role}
+
+     
+
     if not user:
         return Response({"error": "Invalid credentials"}, status=401)
 
@@ -235,7 +250,7 @@ def login_view(request):
     return Response({
         "access": str(refresh.access_token),
         "refresh": str(refresh),
-        "user": UserSerializer(user).data
+        "user": userdata
     })
 
 # -------------------------------------------------
