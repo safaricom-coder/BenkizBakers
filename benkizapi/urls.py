@@ -42,7 +42,7 @@ urlpatterns = [
     path('lessons/<int:id>/unenroll/', views.lesson_unenroll),
     path('course-basket/', views.course_basket),
 
-    path('testenv/', views.test_env),
+    # path('testenv/', views.test_env),
 
     # ── Profile ──
     path('profile/', views.profile_view),

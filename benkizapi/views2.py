@@ -19,7 +19,11 @@ from .models import *
 from django.http import JsonResponse
 import os
 
-
+@api_view(['GET'])
+def test_env(request):
+    return JsonResponse({
+        "cloud_name": os.environ.get("CLOUDINARY_CLOUD_NAME")
+    })
 
 # ─────────────────────────────────────────────
 # LEGACY ENDPOINTS (kept for compatibility)
@@ -146,297 +150,147 @@ def handle_payment_callback(request):
 @api_view(['GET'])
 @ensure_csrf_cookie
 def csrf_token_view(request):
-    return Response({
-        "success": True
-    })
+    return Response({"success": True})
 
 
-# ─────────────────────────────────────────────
-# AUTH
-# ─────────────────────────────────────────────
-# -------------------------------------------------
-# CSRF TOKEN
-# -------------------------------------------------
-
-@api_view(["GET"])
-@ensure_csrf_cookie
-def csrf_token_view(request):
-    return Response({
-        "success": True
-    })
-
-
-# -------------------------------------------------
-# COOKIE SETTINGS
-# Uses values from settings.py
-# -------------------------------------------------
-
-def cookie_options(max_age):
-
-    return {
-        "httponly": settings.SESSION_COOKIE_HTTPONLY,
-        "secure": settings.SESSION_COOKIE_SECURE,
-        "samesite": settings.SESSION_COOKIE_SAMESITE,
-        "path": settings.SESSION_COOKIE_PATH,
-        "max_age": max_age,
-    }
-
-
-# -------------------------------------------------
-# SET TOKENS
-# -------------------------------------------------
-
-def set_tokens(response, user):
-
-    refresh = RefreshToken.for_user(user)
-
-    response.set_cookie(
-        key="access_token",
-        value=str(refresh.access_token),
-        **cookie_options(900)
-    )
-
-    response.set_cookie(
-        key="refresh_token",
-        value=str(refresh),
-        **cookie_options(604800)
-    )
-
-    return response
-
-
-# -------------------------------------------------
-# LOGIN
-# -------------------------------------------------
-
-@api_view(["POST"])
+@api_view(['POST'])
 @permission_classes([AllowAny])
 def login_view(request):
-
     username = request.data.get("username")
     password = request.data.get("password")
 
-    user = auth.authenticate(
-        username=username,
-        password=password
-    )
+    user = auth.authenticate(username=username, password=password)
 
     if not user:
-        return Response(
-            {
-                "error": "Invalid credentials"
-            },
-            status=401
-        )
+        return Response({"error": "Invalid credentials"}, status=401)
 
     role = "CUSTOMER"
-
     if user.is_superuser:
         role = "SUPER_ADMIN"
-
     elif user.is_staff:
         role = "ADMIN"
 
     userdata = UserSerializer(user).data
     userdata["role"] = role
 
-    response = Response({
-        "success": True,
-        "user": userdata
-    })
+    response = Response({"user": userdata})
 
     return set_tokens(response, user)
 
 
-# -------------------------------------------------
-# REFRESH
-# -------------------------------------------------
 
-@api_view(["POST"])
-@permission_classes([AllowAny])
-def refresh(request):
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.response import Response
 
-    refresh_token = request.COOKIES.get(
-        "refresh_token"
+def set_tokens(response, user):
+    refresh = RefreshToken.for_user(user)
+    print(f'''
+    
+    done !
+    
+    ''')
+    response.set_cookie(
+        "access_token",
+        str(refresh.access_token),
+        httponly=True,
+        secure=True,
+        samesite="None",
+        domain=".pythonanywhere.com",
+        max_age=900,
+        path= "/"
     )
-
-    if not refresh_token:
-        return Response(
-            {
-                "error": "No refresh token"
-            },
-            status=401
-        )
-
-    try:
-        refresh_obj = RefreshToken(
-            refresh_token
-        )
-
-    except Exception:
-
-        return Response(
-            {
-                "error": "Invalid refresh token"
-            },
-            status=401
-        )
-
-    response = Response({
-        "success": True
-    })
 
     response.set_cookie(
-        key="access_token",
-        value=str(refresh_obj.access_token),
-        **cookie_options(900)
+        "refresh_token",
+        str(refresh),
+        httponly=True,
+        secure=True,
+        samesite="None",
+        domain=".pythonanywhere.com",
+        max_age=604800,
+        path= "/"
     )
 
     return response
 
 
-# -------------------------------------------------
-# LOGOUT
-# -------------------------------------------------
 
-@api_view(["POST"])
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def refresh(request):
+    token = request.COOKIES.get("refresh_token")
+
+    if not token:
+        return Response({"error": "No refresh token"}, status=401)
+
+    try:
+        refresh = RefreshToken(token)
+    except Exception:
+        return Response({"error": "Invalid token"}, status=401)
+
+    response = Response({"success": True})
+
+    response.set_cookie(
+        "access_token",
+        str(refresh.access_token),
+        httponly=True,
+        secure=True,
+        samesite="None",
+        max_age=900,
+        path="/"
+    )
+
+    return response
+
+
+
+
+@api_view(['POST'])
 @permission_classes([AllowAny])
 def logout_view(request):
+    response = Response({"success": True})
 
-    response = Response({
-        "success": True
-    })
-
-    response.delete_cookie(
-        "access_token",
-        path=settings.SESSION_COOKIE_PATH
-    )
-
-    response.delete_cookie(
-        "refresh_token",
-        path=settings.SESSION_COOKIE_PATH
-    )
+    response.delete_cookie("access_token", path="/")
+    response.delete_cookie("refresh_token", path="/")
 
     return response
 
 
-# -------------------------------------------------
-# REGISTER
-# -------------------------------------------------
-
-@api_view(["POST"])
+@api_view(['POST'])
 @permission_classes([AllowAny])
 def register_view(request):
-
-    username = request.data.get(
-        "username",
-        ""
-    ).strip()
-
-    password = request.data.get(
-        "password1",
-        ""
-    ).strip()
-
-    email = request.data.get(
-        "email",
-        ""
-    ).strip()
-
-    lastname = request.data.get(
-        "lastname",
-        ""
-    ).strip()
+    username = request.data.get('username', '').strip()
+    password = request.data.get('password1', '').strip()
+    email = request.data.get('email', '').strip()
+    lastname = request.data.get('lastname', '').strip()
 
     if not username or not password:
+        return Response({'error': 'Username and password are required.'}, status=status.HTTP_400_BAD_REQUEST)
+    if User.objects.filter(username=username).exists():
+        return Response({'error': 'Username already taken.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        return Response(
-            {
-                "error":
-                "Username and password are required"
-            },
-            status=400
-        )
-
-    if User.objects.filter(
-        username=username
-    ).exists():
-
-        return Response(
-            {
-                "error":
-                "Username already exists"
-            },
-            status=400
-        )
-
-    user = User.objects.create_user(
-        username=username,
-        password=password,
-        email=email
-    )
-
-    profile = UserProfile.objects.create(
-        user=user,
-        lastname=lastname
-    )
-
-    Cart.objects.create(
-        user=user
-    )
-
-    WishList.objects.create(
-        user=user
-    )
-
-    CourseBasket.objects.create(
-        user=user
-    )
-
-    return Response(
-        {
-            "user":
-            UserSerializer(user).data,
-
-            "profile":
-            UserProfileSerializer(profile).data,
-        },
-        status=201
-    )
-
-
-# -------------------------------------------------
-# CURRENT USER
-# -------------------------------------------------
-
-@api_view(["GET"])
-def me_view(request):
-
-    if not request.user.is_authenticated:
-
-        return Response({
-            "user": None,
-            "profile": None
-        })
-
-    profile = UserProfile.objects.filter(
-        user=request.user
-    ).first()
+    user = User.objects.create_user(username=username, password=password, email=email)
+    profile = UserProfile.objects.create(user=user, lastname=lastname)
+    Cart.objects.create(user=user)
+    WishList.objects.create(user=user)
+    CourseBasket.objects.create(user=user)
 
     return Response({
-        "user":
-        UserSerializer(
-            request.user
-        ).data,
+        'user': UserSerializer(user).data,
+        'profile': UserProfileSerializer(profile).data,
+    }, status=status.HTTP_201_CREATED)
 
-        "profile":
-        UserProfileSerializer(
-            profile
-        ).data if profile else None
+
+@api_view(['GET'])
+def me_view(request):
+    if not request.user.is_authenticated:
+        return Response({'user': None, 'profile': None})
+    profile = UserProfile.objects.filter(user=request.user).first()
+    return Response({
+        'user': UserSerializer(request.user).data,
+        'profile': UserProfileSerializer(profile).data if profile else None,
     })
-
-
-
 
 
 # ── ITEMS ──
@@ -813,8 +667,3 @@ def stats_view(request):
         'team': UserProfile.objects.filter(is_team=True).count(),
         'locations': Location.objects.count(),
     })
-
-
-
-
-
