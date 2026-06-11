@@ -222,40 +222,21 @@ def set_tokens(response, user):
 @permission_classes([AllowAny])
 def login_view(request):
 
-    username = request.data.get("username")
-    password = request.data.get("password")
-
     user = auth.authenticate(
-        username=username,
-        password=password
+        username=request.data.get("username"),
+        password=request.data.get("password")
     )
 
     if not user:
-        return Response(
-            {
-                "error": "Invalid credentials"
-            },
-            status=401
-        )
+        return Response({"error": "Invalid credentials"}, status=401)
 
-    role = "CUSTOMER"
+    refresh = RefreshToken.for_user(user)
 
-    if user.is_superuser:
-        role = "SUPER_ADMIN"
-
-    elif user.is_staff:
-        role = "ADMIN"
-
-    userdata = UserSerializer(user).data
-    userdata["role"] = role
-
-    response = Response({
-        "success": True,
-        "user": userdata
+    return Response({
+        "access": str(refresh.access_token),
+        "refresh": str(refresh),
+        "user": UserSerializer(user).data
     })
-
-    return set_tokens(response, user)
-
 
 # -------------------------------------------------
 # REFRESH
