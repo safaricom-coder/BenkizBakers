@@ -171,16 +171,25 @@ def csrf_token_view(request):
 # Uses values from settings.py
 # -------------------------------------------------
 
-def cookie_options(max_age):
+# def cookie_options(max_age):
 
+#     return {
+#         "httponly": settings.SESSION_COOKIE_HTTPONLY,
+#         "secure": settings.SESSION_COOKIE_SECURE,
+#         "samesite": settings.SESSION_COOKIE_SAMESITE,
+#         "path": settings.SESSION_COOKIE_PATH,
+#         "max_age": max_age,
+#     }
+
+
+def cookie_options(max_age):
     return {
-        "httponly": settings.SESSION_COOKIE_HTTPONLY,
-        "secure": settings.SESSION_COOKIE_SECURE,
-        "samesite": settings.SESSION_COOKIE_SAMESITE,
-        "path": settings.SESSION_COOKIE_PATH,
+        "httponly": True,
+        "secure": True,
+        "samesite": "None",
+        "path": "/",
         "max_age": max_age,
     }
-
 
 # -------------------------------------------------
 # SET TOKENS
