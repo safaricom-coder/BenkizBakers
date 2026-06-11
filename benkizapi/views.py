@@ -396,34 +396,34 @@ def register_view(request):
 # CURRENT USER
 # -------------------------------------------------
 
+
+
 @api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def me_view(request):
+    user = request.user
+    if not user:
+        return Response({"error": "Invalid credentials"}, status=401)
 
-    if not request.user.is_authenticated:
+    role = "CUSTOMER"
+    if user.is_superuser:
+        role = "SUPER_ADMIN"
+    elif user.is_staff:
+        role = "ADMIN"
 
-        return Response({
-            "user": None,
-            "profile": None
-        })
+    userdata = UserSerializer(user).data
+    userdata = userdata | {"role":role}
 
-    profile = UserProfile.objects.filter(
-        user=request.user
-    ).first()
+    refresh = RefreshToken.for_user(user)
+    profile = UserProfile.objects.filter(user=request.user).first()
 
     return Response({
-        "user":
-        UserSerializer(
-            request.user
-        ).data,
+        "access": str(refresh.access_token),
+        "refresh": str(refresh),
+        "user": userdata,
+        "profile": UserProfileSerializer(profile).data if profile else None
 
-        "profile":
-        UserProfileSerializer(
-            profile
-        ).data if profile else None
     })
-
-
-
 
 
 # ── ITEMS ──
@@ -448,7 +448,7 @@ def items_list(request):
             Q(category__name__icontains=search)
         ).distinct()
 
-    # 🏷️ CATEGORY FILTER (FIXED)
+    # CATEGORY FILTER (FIXED)
     if category and category != 'all':
         queryset = queryset.filter(
             Q(category__name__iexact=category) |
