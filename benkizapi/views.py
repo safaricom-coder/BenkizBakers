@@ -1,296 +1,299 @@
-from rest_framework.response import Response
-from rest_framework import status
+# ─────────────────────────────────────────────
+# AUTH
+# ─────────────────────────────────────────────
+
+from django.conf import settings
+from django.contrib import auth
+from django.views.decorators.csrf import ensure_csrf_cookie
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from django.middleware.csrf import get_token
-from django.http import HttpResponse, JsonResponse
-from django.contrib import auth
-from django.db.models import Q
-import json
 
-from .serializers import *
-from main.models import *
-from .models import *
+# -------------------------------------------------
+# CSRF TOKEN
+# -------------------------------------------------
 
-
-from django.http import JsonResponse
-import os
-
-@api_view(['GET'])
-def test_env(request):
-    return JsonResponse({
-        "cloud_name": os.environ.get("CLOUDINARY_CLOUD_NAME")
-    })
-
-# ─────────────────────────────────────────────
-# LEGACY ENDPOINTS (kept for compatibility)
-# ─────────────────────────────────────────────
-
-@api_view(['GET'])
-def getAllItems(request):
-    items = Item.objects.all()
-    serializer = ItemSerializer(items, many=True)
-    return Response(serializer.data)
-
-
-@api_view(['POST'])
-def createItem(request):
-    serializer = ItemSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-    else:
-        return Response(status=status.HTTP_400_BAD_REQUEST)
-    return Response(status=status.HTTP_200_OK)
-
-
-@api_view(['GET', 'DELETE', 'PATCH', 'PUT'])
-def getItem(request, id):
-    try:
-        item = Item.objects.get(id=id)
-    except:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    if request.method == 'GET':
-        serializer = ItemSerializer(item)
-        return Response(serializer.data)
-    elif request.method == 'PATCH':
-        serializer = ItemSerializer(item, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == 'DELETE':
-        item.delete()
-        return Response(status=status.HTTP_200_OK)
-    return Response(serializer.data)
-
-
-@api_view(['GET', 'DELETE', 'PUT'])
-def getCartItem(request, id):
-    cart = Cart.objects.get(user=request.user)
-    try:
-        cartitem = CartItem.objects.get(cart=cart, id=id)
-    except:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    if request.method == 'GET':
-        serializer = CartItemSerializer(cartitem)
-        return Response(serializer.data)
-    elif request.method == 'PUT':
-        serializer = CartItemSerializer(cartitem, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == 'DELETE':
-        cartitem.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-    return Response(serializer.data)
-
-
-@api_view(['DELETE'])
-def delete_all_items(request):
-    allitems = Item.objects.all()
-    if not request.user.is_superuser:
-        return Response({'detail': 'Not authorized.'}, status=status.HTTP_403_FORBIDDEN)
-    allitems.delete()
-    return Response({'status': 'All data deleted.'}, status=status.HTTP_204_NO_CONTENT)
-
-
-@api_view(['DELETE'])
-def delete_user(request, id):
-    try:
-        user = User.objects.get(id=id)
-    except:
-        return Response({'status': 'No such User'}, status=status.HTTP_200_OK)
-    operator = request.user
-    operatorprofile = UserProfile.objects.get(user=operator)
-    if request.method == 'DELETE':
-        if operatorprofile.is_normal_admin:
-            user.delete()
-            return Response({'status': 'User deleted.'}, status=status.HTTP_200_OK)
-        else:
-            return Response({'status': "You dont have clearance !"}, status=status.HTTP_200_OK)
-    else:
-        return Response({'status': "Bad request !"}, status=status.HTTP_400_BAD_REQUEST)
-
-
-@csrf_exempt
-@api_view(['POST'])
-def handle_payment_callback(request):
-    data = request.data
-    result = data.get("response", {})
-    external_reference = result.get("ExternalReference")
-    transaction = Transaction.objects.filter(external_reference=external_reference).first()
-    if not transaction:
-        return HttpResponse("ok", status=200, content_type="text/plain")
-    if transaction.status == "SUCCESS":
-        return HttpResponse("ok", status=200, content_type="text/plain")
-    transaction.callback_body = json.dumps(data)
-    status_value = result.get("Status")
-    if status_value == "Success":
-        transaction.status = "SUCCESS"
-        transaction.status_bool = True
-    else:
-        transaction.status = "FAILED"
-        transaction.status_bool = False
-    transaction.mpesaReceiptNumber = result.get("MpesaReceiptNumber")
-    transaction.responseDescription = result.get("ResultDesc")
-    transaction.merchantRequestID = result.get("MerchantRequestID")
-    transaction.save()
-    return HttpResponse("ok", status=200, content_type="text/plain")
-
-
-# ─────────────────────────────────────────────
-# NEW REACT API ENDPOINTS
-# ─────────────────────────────────────────────
-
-# ── AUTH ──
-@api_view(['GET'])
+@api_view(["GET"])
 @ensure_csrf_cookie
 def csrf_token_view(request):
-    return Response({"success": True})
+    return Response({
+        "success": True
+    })
 
 
-@api_view(['POST'])
+# -------------------------------------------------
+# COOKIE SETTINGS
+# Uses values from settings.py
+# -------------------------------------------------
+
+def cookie_options(max_age):
+
+    return {
+        "httponly": settings.SESSION_COOKIE_HTTPONLY,
+        "secure": settings.SESSION_COOKIE_SECURE,
+        "samesite": settings.SESSION_COOKIE_SAMESITE,
+        "path": settings.SESSION_COOKIE_PATH,
+        "max_age": max_age,
+    }
+
+
+# -------------------------------------------------
+# SET TOKENS
+# -------------------------------------------------
+
+def set_tokens(response, user):
+
+    refresh = RefreshToken.for_user(user)
+
+    response.set_cookie(
+        key="access_token",
+        value=str(refresh.access_token),
+        **cookie_options(900)
+    )
+
+    response.set_cookie(
+        key="refresh_token",
+        value=str(refresh),
+        **cookie_options(604800)
+    )
+
+    return response
+
+
+# -------------------------------------------------
+# LOGIN
+# -------------------------------------------------
+
+@api_view(["POST"])
 @permission_classes([AllowAny])
 def login_view(request):
+
     username = request.data.get("username")
     password = request.data.get("password")
 
-    user = auth.authenticate(username=username, password=password)
+    user = auth.authenticate(
+        username=username,
+        password=password
+    )
 
     if not user:
-        return Response({"error": "Invalid credentials"}, status=401)
+        return Response(
+            {
+                "error": "Invalid credentials"
+            },
+            status=401
+        )
 
     role = "CUSTOMER"
+
     if user.is_superuser:
         role = "SUPER_ADMIN"
+
     elif user.is_staff:
         role = "ADMIN"
 
     userdata = UserSerializer(user).data
     userdata["role"] = role
 
-    response = Response({"user": userdata})
+    response = Response({
+        "success": True,
+        "user": userdata
+    })
 
     return set_tokens(response, user)
 
 
+# -------------------------------------------------
+# REFRESH
+# -------------------------------------------------
 
-from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.response import Response
-
-def set_tokens(response, user):
-    refresh = RefreshToken.for_user(user)
-    print(f'''
-    
-    done !
-    
-    ''')
-    response.set_cookie(
-        "access_token",
-        str(refresh.access_token),
-        httponly=True,
-        secure=True,
-        samesite="None",
-        domain=".pythonanywhere.com",
-        max_age=900,
-        path= "/"
-    )
-
-    response.set_cookie(
-        "refresh_token",
-        str(refresh),
-        httponly=True,
-        secure=True,
-        samesite="None",
-        domain=".pythonanywhere.com",
-        max_age=604800,
-        path= "/"
-    )
-
-    return response
-
-
-
-
-@api_view(['POST'])
+@api_view(["POST"])
 @permission_classes([AllowAny])
 def refresh(request):
-    token = request.COOKIES.get("refresh_token")
 
-    if not token:
-        return Response({"error": "No refresh token"}, status=401)
+    refresh_token = request.COOKIES.get(
+        "refresh_token"
+    )
+
+    if not refresh_token:
+        return Response(
+            {
+                "error": "No refresh token"
+            },
+            status=401
+        )
 
     try:
-        refresh = RefreshToken(token)
-    except Exception:
-        return Response({"error": "Invalid token"}, status=401)
+        refresh_obj = RefreshToken(
+            refresh_token
+        )
 
-    response = Response({"success": True})
+    except Exception:
+
+        return Response(
+            {
+                "error": "Invalid refresh token"
+            },
+            status=401
+        )
+
+    response = Response({
+        "success": True
+    })
 
     response.set_cookie(
-        "access_token",
-        str(refresh.access_token),
-        httponly=True,
-        secure=True,
-        samesite="None",
-        max_age=900,
-        path="/"
+        key="access_token",
+        value=str(refresh_obj.access_token),
+        **cookie_options(900)
     )
 
     return response
 
 
+# -------------------------------------------------
+# LOGOUT
+# -------------------------------------------------
 
-
-@api_view(['POST'])
+@api_view(["POST"])
 @permission_classes([AllowAny])
 def logout_view(request):
-    response = Response({"success": True})
 
-    response.delete_cookie("access_token", path="/")
-    response.delete_cookie("refresh_token", path="/")
+    response = Response({
+        "success": True
+    })
+
+    response.delete_cookie(
+        "access_token",
+        path=settings.SESSION_COOKIE_PATH
+    )
+
+    response.delete_cookie(
+        "refresh_token",
+        path=settings.SESSION_COOKIE_PATH
+    )
 
     return response
 
 
-@api_view(['POST'])
+# -------------------------------------------------
+# REGISTER
+# -------------------------------------------------
+
+@api_view(["POST"])
 @permission_classes([AllowAny])
 def register_view(request):
-    username = request.data.get('username', '').strip()
-    password = request.data.get('password1', '').strip()
-    email = request.data.get('email', '').strip()
-    lastname = request.data.get('lastname', '').strip()
+
+    username = request.data.get(
+        "username",
+        ""
+    ).strip()
+
+    password = request.data.get(
+        "password1",
+        ""
+    ).strip()
+
+    email = request.data.get(
+        "email",
+        ""
+    ).strip()
+
+    lastname = request.data.get(
+        "lastname",
+        ""
+    ).strip()
 
     if not username or not password:
-        return Response({'error': 'Username and password are required.'}, status=status.HTTP_400_BAD_REQUEST)
-    if User.objects.filter(username=username).exists():
-        return Response({'error': 'Username already taken.'}, status=status.HTTP_400_BAD_REQUEST)
 
-    user = User.objects.create_user(username=username, password=password, email=email)
-    profile = UserProfile.objects.create(user=user, lastname=lastname)
-    Cart.objects.create(user=user)
-    WishList.objects.create(user=user)
-    CourseBasket.objects.create(user=user)
+        return Response(
+            {
+                "error":
+                "Username and password are required"
+            },
+            status=400
+        )
 
-    return Response({
-        'user': UserSerializer(user).data,
-        'profile': UserProfileSerializer(profile).data,
-    }, status=status.HTTP_201_CREATED)
+    if User.objects.filter(
+        username=username
+    ).exists():
+
+        return Response(
+            {
+                "error":
+                "Username already exists"
+            },
+            status=400
+        )
+
+    user = User.objects.create_user(
+        username=username,
+        password=password,
+        email=email
+    )
+
+    profile = UserProfile.objects.create(
+        user=user,
+        lastname=lastname
+    )
+
+    Cart.objects.create(
+        user=user
+    )
+
+    WishList.objects.create(
+        user=user
+    )
+
+    CourseBasket.objects.create(
+        user=user
+    )
+
+    return Response(
+        {
+            "user":
+            UserSerializer(user).data,
+
+            "profile":
+            UserProfileSerializer(profile).data,
+        },
+        status=201
+    )
 
 
-@api_view(['GET'])
+# -------------------------------------------------
+# CURRENT USER
+# -------------------------------------------------
+
+@api_view(["GET"])
 def me_view(request):
+
     if not request.user.is_authenticated:
-        return Response({'user': None, 'profile': None})
-    profile = UserProfile.objects.filter(user=request.user).first()
+
+        return Response({
+            "user": None,
+            "profile": None
+        })
+
+    profile = UserProfile.objects.filter(
+        user=request.user
+    ).first()
+
     return Response({
-        'user': UserSerializer(request.user).data,
-        'profile': UserProfileSerializer(profile).data if profile else None,
+        "user":
+        UserSerializer(
+            request.user
+        ).data,
+
+        "profile":
+        UserProfileSerializer(
+            profile
+        ).data if profile else None
     })
+
+
+
 
 
 # ── ITEMS ──
@@ -667,3 +670,8 @@ def stats_view(request):
         'team': UserProfile.objects.filter(is_team=True).count(),
         'locations': Location.objects.count(),
     })
+
+
+
+
+
