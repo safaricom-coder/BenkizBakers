@@ -418,9 +418,7 @@ def me_view(request):
     profile = UserProfile.objects.filter(user=request.user).first()
 
     return Response({
-        "access": str(refresh.access_token),
-        "refresh": str(refresh),
-        "user": userdata,
+              "user": userdata,
         "profile": UserProfileSerializer(profile).data if profile else None
 
     })
