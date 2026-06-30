@@ -25,7 +25,6 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
-    ".pythonanywhere.com"
     "benkizbakers.pythonanywhere.com",
     ".vercel.app",
 ]
