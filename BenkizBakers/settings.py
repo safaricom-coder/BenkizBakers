@@ -16,7 +16,7 @@ SECRET_KEY = os.getenv(
 )
 
 DEBUG = os.getenv("DEBUG", "False") == "True"
-DEBUG = True
+
 
 # ==========================================================
 # HOSTS
