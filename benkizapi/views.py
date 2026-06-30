@@ -381,12 +381,7 @@ def register_view(request):
     )
 
     return Response(
-        {
-            "user":
-            UserSerializer(user).data,
-
-            "profile":
-            UserProfileSerializer(profile).data,
+        {"message":"success"
         },
         status=201
     )
