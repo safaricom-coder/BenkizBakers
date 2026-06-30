@@ -16,6 +16,7 @@ SECRET_KEY = os.getenv(
 )
 
 DEBUG = os.getenv("DEBUG", "False") == "True"
+DEBUG = True
 
 # ==========================================================
 # HOSTS
@@ -164,11 +165,11 @@ CORS_ALLOWED_ORIGINS = [
 
     "http://localhost:5173",
     "http://127.0.0.1:5173",
+    "http://127.0.0.1:8000",
 
     "https://benkizbakers.pythonanywhere.com",
 ]
 
-CORS_ALLOW_CREDENTIALS = True
 
 # ==========================================================
 # CSRF
@@ -178,6 +179,7 @@ CSRF_TRUSTED_ORIGINS = [
 
     "http://localhost:5173",
     "http://127.0.0.1:5173",
+    "http://127.0.0.1:8000",
 
     "https://benkizbakers.pythonanywhere.com",
 ]
@@ -185,35 +187,46 @@ CSRF_TRUSTED_ORIGINS = [
 # ==========================================================
 # COOKIES
 # ==========================================================
-SESSION_COOKIE_SECURE = True
-SESSION_COOKIE_SAMESITE = "None"
-SESSION_COOKIE_HTTPONLY = True
 
-CSRF_COOKIE_SECURE = True
-CSRF_COOKIE_SAMESITE = "None"
-CSRF_COOKIE_HTTPONLY = False
+if not DEBUG:
 
-SESSION_COOKIE_DOMAIN = None
-CSRF_COOKIE_DOMAIN = None
+    # ==========================================================
+    # COOKIES
+    # ==========================================================
+
+    SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_SAMESITE = "None"
+    SESSION_COOKIE_HTTPONLY = True
+
+    CSRF_COOKIE_SECURE = True
+    CSRF_COOKIE_SAMESITE = "None"
+    CSRF_COOKIE_HTTPONLY = False
+
+    SESSION_COOKIE_DOMAIN = None
+    CSRF_COOKIE_DOMAIN = None
+
+    # ==========================================================
+    # SECURITY
+    # ==========================================================
+    SECURE_SSL_REDIRECT = True
+
+    SECURE_PROXY_SSL_HEADER = (
+        "HTTP_X_FORWARDED_PROTO",
+        "https",
+    )
+
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+
+    X_FRAME_OPTIONS = "SAMEORIGIN"
+
+CORS_ALLOW_CREDENTIALS = True
 
 SESSION_COOKIE_PATH = "/"
 CSRF_COOKIE_PATH = "/"
 
-# ==========================================================
-# SECURITY
-# ==========================================================
-SECURE_SSL_REDIRECT = True
 
-SECURE_PROXY_SSL_HEADER = (
-    "HTTP_X_FORWARDED_PROTO",
-    "https",
-)
-
-SECURE_HSTS_SECONDS = 31536000
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
-
-X_FRAME_OPTIONS = "SAMEORIGIN"
 
 # ==========================================================
 # STATIC

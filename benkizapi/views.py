@@ -786,6 +786,23 @@ def hero_banners(request):
     heros = HeroBanner.objects.all()
     return Response(HeroBannerSerializer(heros, many=True).data)
 
+    
+# ── TEAM ──
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def team(request):
+    return Response([])
+    
+
+# ── TESTIMONIALS ──
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def testimonials(request):
+    return Response([])
+    
+
 
 # ── STATS ──
 

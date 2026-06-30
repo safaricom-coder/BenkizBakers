@@ -68,6 +68,10 @@ urlpatterns = [
 
     # ── Stats ──
     path('stats/', views.stats_view),
+    # ── TEAM ──
+    path('stats/', views.team),
+    # ── TESTIMONIALS ──
+    path('stats/', views.testimonials),
 
 
     path('admin/products/',adminViews.getAdminProducts),
