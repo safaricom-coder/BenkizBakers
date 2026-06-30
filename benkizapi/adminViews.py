@@ -54,7 +54,7 @@ def editAdminProduct(request):
     except Item.DoesNotExist:
         return JsonResponse({'error': 'Product not found'}, status=404)
 
-@api_view(['CREATE'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def createAdminProduct(request):
     data = json.loads(request.body)
