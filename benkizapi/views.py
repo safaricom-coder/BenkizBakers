@@ -321,7 +321,7 @@ def register_view(request):
     ).strip()
 
     password = request.data.get(
-        "password1",
+        "auth",
         ""
     ).strip()
 
@@ -394,7 +394,6 @@ def register_view(request):
 
 
 @api_view(["GET"])
-@permission_classes([IsAuthenticated])
 def me_view(request):
     user = request.user
     if not user:

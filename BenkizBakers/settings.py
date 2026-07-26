@@ -163,6 +163,9 @@ STORAGES = {
 # ==========================================================
 CORS_ALLOWED_ORIGINS = [
     "https://benkiz.vercel.app",
+    "https://bakery.benkiz.org",
+    "https://bakes.benkiz.org",
+    "https://cakes.benkiz.org",
 
     "http://localhost:5173",
     "http://127.0.0.1:5173",
@@ -177,6 +180,9 @@ CORS_ALLOWED_ORIGINS = [
 # ==========================================================
 CSRF_TRUSTED_ORIGINS = [
     "https://benkiz.vercel.app",
+    "https://bakery.benkiz.org",
+    "https://bakes.benkiz.org",
+    "https://cakes.benkiz.org",
 
     "http://localhost:5173",
     "http://127.0.0.1:5173",
