@@ -10,20 +10,20 @@ def create_default_categories(sender, **kwargs):
     CakeCategory = apps.get_model("main", "CakeCategory")
 
     categories = [
-        "Birthday Cakes",
-        "Wedding Cakes",
-        "Anniversary Cakes",
-        "Graduation Cakes",
-        "Custom Designer Cakes",
-        "Cupcakes",
-        "Mini Cakes",
-        "Cheesecakes",
-        "Chocolate Cakes",
-        "Red Velvet Cakes",
-        "Fruit Cakes",
-        "Kids Cakes",
-        "Corporate Cakes",
-        "Seasonal Specials"
+        # "Birthday Cakes",
+        # "Wedding Cakes",
+        # "Anniversary Cakes",
+        # "Graduation Cakes",
+        # "Custom Designer Cakes",
+        # "Cupcakes",
+        # "Mini Cakes",
+        # "Cheesecakes",
+        # "Chocolate Cakes",
+        # "Red Velvet Cakes",
+        # "Fruit Cakes",
+        # "Kids Cakes",
+        # "Corporate Cakes",
+        # "Seasonal Specials"
     ]
 
     for category in categories:

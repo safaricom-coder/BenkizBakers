@@ -14,6 +14,7 @@ from .serializers import *
 from main.models import *
 from .models import *
 
+from main.models import cakecategories
 
 from django.http import JsonResponse
 
@@ -66,6 +67,32 @@ def createAdminProduct(request):
     thumbnail = data.get('thumbnail')
     thumbnail_public_id = data.get('thumbnail_public_id')
 
+    category_names = data.get('category')
+
+    categories = CakeCategory.objects.filter(name__in=category_names)
+
+
+    print(f"""
+    
+    
+    
+     category array : {category_names}
+    
+    
+    
+    """)  # Debugging line
+  # Debugging line
+    print(f"""
+    
+    
+    
+     category array : {categories}
+    
+    
+    
+    """)  # Debugging line
+    print("Creating product with data:", data)  # Debugging line
+
     item = Item.objects.create(
         name=name,
         description=description,
@@ -74,4 +101,6 @@ def createAdminProduct(request):
         thumbnail=thumbnail,
         thumbnail_public_id=thumbnail_public_id
     )
+
+    item.category.set(categories) 
     return JsonResponse({'message': 'Product created successfully', 'id': item.id}, status=201)

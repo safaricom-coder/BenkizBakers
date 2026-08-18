@@ -33,25 +33,44 @@ class Cart(models.Model):
         return f"{self.user.username.capitalize}'s cart"
 
 cakecategories = (
-    ('redvelvet','redvelvet'),
-    ('cupcake','cupcake'),
-    ('biscuit','biscuit'),
-    ('cookies','cookies'),
-    ('all','all'),
-    ('wedding','wedding'),
-    ('macarons','macarons'),
-    ('cake','cake'),
-    ('anniversarycake','anniversarycake'),
-    ('birthdaycake','birthdaycake')
+    ('redvelvet','Red Velvet'),
+    ('cupcake','Cupcake'),
+    ('biscuit','Biscuit'),
+    ('cookies','Cookies'),
+    ('wedding','Weddings Cakes'),
+    ('macarons','Macarons'),
+    ('cake','Cake'),
+    ('anniversarycake','Anniversary Cakes'),
+    ('birthdaycake','Birthday Cakes'),
+    ('graduation','Graduation Cakes'),
+    ('custom','Custom Designer Cakes'),
+    ('cupcakes','Cupcakes'),
+    ('cheesecakes','Cheesecakes'),
+    ('chocolatecakes','Chocolate Cakes'),
+    ('fruitcakes','Fruit Cakes'),
+    ('kidscakes','Kids Cakes'),
+    ('corporatecakes','Corporate Cakes'),
+    ('seasonalspecials','Seasonal Specials')
+
+    
 )
 
 
 from django.utils.text import slugify
 
+
+
 class CakeCategory(models.Model):
     name = models.CharField(max_length=50)
     slug = models.SlugField(unique=True, blank=True)
+    cakecategories = cakecategories
 
+    def createMissingCategories(**args):
+        
+        for slug, name in cakecategories:
+            if not CakeCategory.objects.filter(name = name).exists():
+                CakeCategory.objects.create(name=name)
+        return True
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -64,8 +83,9 @@ class CakeCategory(models.Model):
                 counter += 1
 
             self.slug = slug
-
+      
         super().save(*args, **kwargs)
+
 
     def __str__(self):
         return self.name
